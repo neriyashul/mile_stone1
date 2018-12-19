@@ -5,7 +5,7 @@
 using namespace std;
 
 // interface
-class Commamd {
+class Command {
 public:
 
     virtual void doCommand(string);
