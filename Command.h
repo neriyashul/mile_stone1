@@ -8,7 +8,7 @@ using namespace std;
 class Command {
 public:
 
-    virtual void doCommand(string);
+    virtual void doCommand(string) = 0;
 };
 
 
