@@ -27,24 +27,24 @@ bool ConditionParser::isConditionSatisfy(
         switch (condition[0]) {
             // case !=
             case '!':
-                return (exp1 != exp2);
+                return (exp1.calculate() != exp2.calculate());
                 // case <=
             case '<':
-                return (exp1 <= exp2);
+                return (exp1.calculate() <= exp2.calculate());
                 // case ==
             case '=':
-                return (exp1 == exp2);
+                return (exp1.calculate() == exp2.calculate());
                 // case >=
             case '>':
-                return (exp1 >= exp2);
+                return (exp1.calculate() >= exp2.calculate());
             default:
                 return false;
         }
     } else {
         if (condition[0] == '<') {
-            return (exp1 < exp2);
+            return (exp1.calculate() < exp2.calculate());
         } else if (condition[0] == '>') {
-            return (exp1 > exp2);
+            return (exp1.calculate() > exp2.calculate());
         }
 
         return false;
