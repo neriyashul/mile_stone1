@@ -1,4 +1,4 @@
-#include "ConditionParser.h"
+#include "ConditionParserCommand.h"
 #include "string.h"
 
 
@@ -19,7 +19,7 @@
  * @param exp2 - Expression.
  * @return bool.
  */
-bool ConditionParser::isConditionSatisfy(
+bool ConditionParserCommand::isConditionSatisfy(
         const char* condition, Expression& exp1, Expression& exp2) {
 
     // if there is 2 char in the condition:

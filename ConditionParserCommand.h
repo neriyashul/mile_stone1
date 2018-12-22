@@ -6,7 +6,7 @@
 #include "Expression.h"
 
 
-class ConditionParser : Command {
+class ConditionParserCommand : public Command {
 protected:
     vector<Command*> commands;
 public:
@@ -33,7 +33,7 @@ public:
  /**
   * @overrite doCommand.
   */
- virtual void doCommand() = 0;
+ virtual void doCommand(vector<string>&) = 0;
 
  /**
   * The function insert command to commands.
