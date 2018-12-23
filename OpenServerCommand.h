@@ -7,6 +7,7 @@
 
 
 #include "Command.h"
+#include "Expression.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -27,8 +28,8 @@ public:
             throw "wrong in the numbers of arguments";
         }
         // use [] because there is 2 arguments.
-        Expression *e = new
-        clientsSockfd.push_back(openServer(v[0].c_str(), v[1].c_str()));
+        //Expression *e = new;
+        //clientsSockfd.push_back(openServer(v[0].c_str(), v[1].c_str()));
     }
 
     vector<int> getClientSockfd() const{
