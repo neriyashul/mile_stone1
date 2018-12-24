@@ -4,6 +4,13 @@
 
 #include "OpenTcpClient.h"
 
+/**
+     * The function connect a client to some server.
+     *
+     * @param ip -  const char*.
+     * @param host - const char*.
+     * @return int.
+     */
 int OpenTcpClient::connectClient(const char *ip, const char *host) {
 
     int sockfd, portno;
@@ -40,7 +47,12 @@ int OpenTcpClient::connectClient(const char *ip, const char *host) {
     return sockfd;
 }
 
-
+/**
+     * The function gets sockdf, ask for string
+     * and write it to the server.
+     *
+     * @param sockfd -  int.
+     */
 void OpenTcpClient::writeToServer(int sockfd)  {
     /* ask for a message from the user, this message
        * will be read by server
