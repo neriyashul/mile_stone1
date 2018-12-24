@@ -14,6 +14,10 @@ protected:
 public:
     virtual double calculate()=0;
     BinaryExpression(Expression*first, Expression*second): left(first), right(second){};
+    ~BinaryExpression(){
+        delete(left);
+        delete (right);
+    };
 };
 
 #endif //MILE_STONE1_BINARYEXPRESSION_H
