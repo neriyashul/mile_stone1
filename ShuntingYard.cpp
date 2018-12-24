@@ -1,6 +1,11 @@
 
 #include "ShuntingYard.h"
 
+/**
+     * The function return if the string is binary expression.
+     * @param strExpression - string&.
+     * @return bool.
+     */
 bool ShuntingYard::IsBinaryOperator(string &strExpression) {
     {
         if (strExpression.size() != 1) {
@@ -19,6 +24,14 @@ bool ShuntingYard::IsBinaryOperator(string &strExpression) {
     }
 }
 
+
+/**
+     * The function return new binary Expression according to insert string.
+     * @param oper - string&.
+     * @param exp1 - Expression*.
+     * @param exp2 - Expression*.
+     * @return Expression*.
+     */
 Expression* ShuntingYard::createBinabryExpression(string &oper,
                             Expression *exp1, Expression *exp2) {
     // the function IsBinaryOperator checked that the size of 'oper' is 1.
@@ -36,6 +49,12 @@ Expression* ShuntingYard::createBinabryExpression(string &oper,
     }
 }
 
+
+/**
+     * The function return if the string that insert is number.
+     * @param strExpression - string&.
+     * @return bool.
+     */
 bool ShuntingYard::IsNumber(string &strExpression) {
     unsigned long i = 0;
     if (strExpression.empty())
@@ -52,6 +71,13 @@ bool ShuntingYard::IsNumber(string &strExpression) {
 }
 
 
+/**
+     * The function gets deque with strings of expressions
+     * in postfix oprder and return Expression in accordance.
+     *
+     * @param strExpressions - deque<string>.
+     * @return Expression*.
+     */
 Expression* ShuntingYard::postfixCalculator(deque<string> strExpressions)  {
     //int EvaluatePostfix(string expression)
     {
@@ -87,6 +113,13 @@ Expression* ShuntingYard::postfixCalculator(deque<string> strExpressions)  {
 }
 
 
+/**
+     * The function gets a string and return
+     * deque with string acoording to ShuntionYard algorithm.
+     *
+     * @param str - string of expression.
+     * @return deque<string>.
+     */
 deque<string> ShuntingYard::shuntingYardAlgorithm(string str) {
     map<char, priorityOperator> priorityMap;
     addPriorityOperator(priorityMap);
@@ -113,14 +146,15 @@ deque<string> ShuntingYard::shuntingYardAlgorithm(string str) {
             num = "";
         }
 
-        isLastCharWasNum = false;
 
         // if the next num is negative:
         if (currentChar == '-' && !isLastCharWasNum) {
             num += "-";
+            isLastCharWasNum = false;
             continue;
         }
 
+        isLastCharWasNum = false;
 
         switch (currentChar) {
             case '(':

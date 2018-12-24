@@ -23,4 +23,4 @@ add_executable(mile_stone1
         ShuntingYard.cpp
         UnaryExpression.h
         ner.h
-        WhileCommand.h OpenClientCommand.h OpenTcpClient.cpp OpenTcpClient.h OpenServerCommand.cpp OpenServerCommand.h)
+        WhileCommand.h OpenClientCommand.h OpenTcpClient.cpp OpenTcpClient.h OpenTcpServer.cpp OpenTcpServer.h OpenServerCommand.h)

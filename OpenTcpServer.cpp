@@ -1,6 +1,11 @@
-#include "OpenServerCommand.h"
+#include "OpenTcpServer.h"
 
-int OpenServerCommand::openServer(int host) {
+/**
+     * The function open new server.
+     * @param host - int.
+     * @return int - sockfd.
+     */
+int OpenTcpServer::openServer(int host) {
     int sockfd, portno;
     struct sockaddr_in serv_addr, cli_addr;
 
@@ -28,7 +33,12 @@ int OpenServerCommand::openServer(int host) {
     return sockfd;
 }
 
-int OpenServerCommand::connectToClient(int sockfd) {
+/**
+     * The function with until a client will connect in sockfd.
+     * @param sockfd - int.
+     * @return int - sockfd.
+     */
+int OpenTcpServer::connectToClient(int sockfd) {
     struct sockaddr_in cli_addr;
     int newsockfd, clilen;
     /* Now start listening for the clients, here process will
@@ -49,7 +59,11 @@ int OpenServerCommand::connectToClient(int sockfd) {
     return newsockfd;
 }
 
-void OpenServerCommand::writeToClient(int sockfd) {
+/**
+     * The function write to client in the sockfd that gets.
+     * @param sockfd - int.
+     */
+void OpenTcpServer::writeToClient(int sockfd) {
     /* If connection is established then start communicating */
     int n;
     char buffer[256];

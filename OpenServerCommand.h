@@ -1,5 +1,5 @@
 //
-// Created by neriya on 12/23/18.
+// Created by neriya on 12/24/18.
 //
 
 #ifndef MILE_STONE1_OPENSERVERCOMMAND_H
@@ -19,7 +19,6 @@
 
 #include <sys/socket.h>
 
-
 class OpenServerCommand : public Command {
     vector<int> clientsSockfd;
 public:
@@ -36,9 +35,9 @@ public:
         return clientsSockfd;
     }
 
-    int openServer(int host);
-    int connectToClient(int sockfd);
-    void writeToClient(int sockfd);
+    virtual int openServer(int host) = 0;
+    virtual int connectToClient(int sockfd) = 0;
+    virtual void writeToClient(int sockfd) = 0;
 };
 
 
