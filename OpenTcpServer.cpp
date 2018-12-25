@@ -1,3 +1,6 @@
+#include <netinet/in.h>
+#include <strings.h>
+#include <unistd.h>
 #include "OpenTcpServer.h"
 
 /**
@@ -68,7 +71,7 @@ void OpenTcpServer::writeToClient(int sockfd) {
     int n;
     char buffer[256];
     bzero(buffer,256);
-    n = read(sockfd,buffer,255);
+    n = static_cast<int>(read(sockfd, buffer, 255));
 
     if (n < 0) {
         perror("ERROR reading from socket");
@@ -78,7 +81,7 @@ void OpenTcpServer::writeToClient(int sockfd) {
     printf("Here is the message: %s\n",buffer);
 
     /* Write a response to the client */
-    n = write(sockfd,"I got your message\n",18);
+    n = static_cast<int>(write(sockfd, "I got your message\n", 18));
 
     if (n < 0) {
         perror("ERROR writing to socket");

@@ -2,7 +2,7 @@
 // Created by neriya on 12/23/18.
 //
 
-#include "OpenTcpClient.h"
+#include "OpenTcpCommand.h"
 
 /**
      * The function connect a client to some server.
@@ -11,7 +11,7 @@
      * @param host - const char*.
      * @return int.
      */
-int OpenTcpClient::connectClient(const char *ip, const char *host) {
+int OpenTcpCommand::connectClient(const char *ip, const char *host) {
 
     int sockfd, portno;
     struct sockaddr_in serv_addr;
@@ -53,7 +53,7 @@ int OpenTcpClient::connectClient(const char *ip, const char *host) {
      *
      * @param sockfd -  int.
      */
-void OpenTcpClient::writeToServer(int sockfd)  {
+void OpenTcpCommand::writeToServer(int sockfd)  {
     /* ask for a message from the user, this message
        * will be read by server
     */

@@ -2,33 +2,34 @@
 // Created by neriya on 12/23/18.
 //
 
-#ifndef MILE_STONE1_OPENTCPSERVER_H
-#define MILE_STONE1_OPENTCPSERVER_H
+#ifndef MILE_STONE1_OPENTCPSERVERCOMMAND_H
+#define MILE_STONE1_OPENTCPSERVERCOMMAND_H
 
 
 #include "OpenServerCommand.h"
 
 class OpenTcpServer : public OpenServerCommand {
+public:
     /**
      * The function open new server.
      * @param host - int.
      * @return int - sockfd.
      */
-    virtual int openServer(int host);
+    int openServer(int host) override;
 
     /**
      * The function with until a client will connect in sockfd.
      * @param sockfd - int.
      * @return int - sockfd.
      */
-    virtual int connectToClient(int sockfd);
+    int connectToClient(int sockfd) override;
 
     /**
      * The function write to client in the sockfd that gets.
      * @param sockfd - int.
      */
-    virtual void writeToClient(int sockfd);
+    void writeToClient(int sockfd) override;
 };
 
 
-#endif //MILE_STONE1_OPENTCPSERVER_H
+#endif //MILE_STONE1_OPENTCPSERVERCOMMAND_H

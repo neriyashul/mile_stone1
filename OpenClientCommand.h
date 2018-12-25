@@ -2,8 +2,8 @@
 // Created by neriya on 12/23/18.
 //
 
-#ifndef MILE_STONE1_OPENSERVERCOMMAND_H
-#define MILE_STONE1_OPENSERVERCOMMAND_H
+#ifndef MILE_STONE1_OPENCLIENTCOMMAND_H
+#define MILE_STONE1_OPENCLIENTCOMMAND_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,9 +24,9 @@ public:
      *
      * @param v -  vector<string>&.
      */
-    virtual void doCommand(vector<string>& v) {
+    void doCommand(vector<string>& v) override {
         if (v.size() != 2) {
-            throw "wrong in the numbers of arguments";
+            throw "wrong numbers of arguments";
         }
         // use [] because there is 2 arguments.
         clientSockfd = connectClient(v[0].c_str(), v[1].c_str());

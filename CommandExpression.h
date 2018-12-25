@@ -18,6 +18,7 @@ public:
 
     virtual double calculate() {
         command->doCommand(arguments);
+        return 0;
     }
 
 };

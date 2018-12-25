@@ -7,24 +7,13 @@
 
 
 #include "Command.h"
-#include "Expression.h"
-#include <stdio.h>
-#include <stdlib.h>
-
-#include <netdb.h>
-#include <unistd.h>
-#include <netinet/in.h>
-
-#include <string.h>
-
-#include <sys/socket.h>
 
 class OpenServerCommand : public Command {
     vector<int> clientsSockfd;
 public:
-    virtual void doCommand(vector<string>& v) {
+    void doCommand(vector<string>& v) override {
         if (v.size() != 2) {
-            throw "wrong in the numbers of arguments";
+            throw "wrong numbers of arguments";
         }
         // use [] because there is 2 arguments.
         //Expression *e = new;
