@@ -1,5 +1,4 @@
 #include "ConditionParserCommand.h"
-#include "string.h"
 
 
 /**
@@ -45,7 +44,7 @@ string ConditionParserCommand::combineStrings(vector<string> strs) {
  * @param v - vector<string>
  * @return vector<vector<string>>.
  */
-vector<vector<string>> ConditionParserCommand::createConditionVec(const vector<string>& v) {
+vector<vector<string>> ConditionParserCommand::createConditionVec(vector<string>& v) {
     vector<string> operatorStr;
     vector<string> condStr =  conditionInString(v);
     size_t pos = 0;
@@ -74,7 +73,7 @@ vector<vector<string>> ConditionParserCommand::createConditionVec(const vector<s
 }
 
 
-vector<string> ConditionParserCommand::conditionHandle(const vector<string>& v) {
+vector<string> ConditionParserCommand::conditionHandle(vector<string>& v) {
     vector<vector<string>> condVec = createConditionVec(v);
     addToSegment(v);
     string left = combineStrings(condVec[0]);

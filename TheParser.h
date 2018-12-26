@@ -2,6 +2,7 @@
 // Created by neriya on 12/23/18.
 //
 
+
 #ifndef MILE_STONE1_THEPARSER_H
 #define MILE_STONE1_THEPARSER_H
 
@@ -9,23 +10,22 @@
 
 #include "Expression.h"
 #include "CommandExpression.h"
-#include "WhileCommand.h"
 #include "SleepCommand.h"
 
 
 #include "OpenTcpClientCommand.h"
 #include "OpenTcpServer.h"
-#include "IfCommand.h"
-#include "ConditionParserCommand.h"
 #include "Enterc.h"
-
 #include <unordered_map>
 #include <string.h>
 #include <thread>
 
+
+
 using namespace std;
 
 #define STR_END_OF_LINE ";"
+
 class ConditionParserCommand;
 
 class Parser {

@@ -7,11 +7,11 @@
 #include "Expression.h"
 #include "ShuntingYard.h"
 #include "TheParser.h"
+#include "WhileCommand.h"
 
 #define STR_END_OF_CONDITION "{"
 #define STR_END_OF_LINE ";"
 
-class Parser;
 
 class ConditionParserCommand : public Command {
 
@@ -63,7 +63,7 @@ public:
   * @param v - const vector<string>& v.
   * @return vector<string>&.
   */
- vector<vector<string>> createConditionVec(const vector<string>& v);
+ vector<vector<string>> createConditionVec(vector<string>& v);
 
 
 
@@ -88,7 +88,7 @@ public:
         * @param v - vector<string>.
         * @return vector<string>.
         */
-    vector<string> conditionHandle(const vector<string>& v);
+    vector<string> conditionHandle(vector<string>& v);
 
     /**
     * The function insert string to inSegmaent.

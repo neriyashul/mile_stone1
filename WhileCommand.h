@@ -1,9 +1,11 @@
 #ifndef MILE_STONE1_WHILE_H
 #define MILE_STONE1_WHILE_H
 
-#include <string.h>
 #include "ConditionParserCommand.h"
+#include "Command.h"
+#include <string.h>
 
+class ConditionParserCommand;
 
 class WhileCommand : public ConditionParserCommand {
 public:
