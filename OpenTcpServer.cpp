@@ -67,7 +67,7 @@ int OpenTcpServer::connectToClient(int sockfd) {
      * @param sockfd - int.
      */
 void OpenTcpServer::writeToClient(int sockfd) {
-    /* If connection is established then start communicating */
+    /* start communicating */
     int n;
     char buffer[256];
     bzero(buffer,256);

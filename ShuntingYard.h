@@ -84,6 +84,9 @@ public:
      * @return Expression*.
      */
     Expression* expressionFromString(string& strExpress) {
+        if (strExpress.empty()) {
+            return nullptr;
+        }
         return postfixCalculator(shuntingYardAlgorithm(strExpress));
     }
 };

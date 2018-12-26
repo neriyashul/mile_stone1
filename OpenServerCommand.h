@@ -16,8 +16,11 @@ public:
             throw "wrong numbers of arguments";
         }
         // use [] because there is 2 arguments.
-        //Expression *e = new;
-        //clientsSockfd.push_back(openServer(v[0].c_str(), v[1].c_str()));
+        int host = stoi(v[0]);
+        int rate = stoi(v[1]);
+        int sockfd = connectToClient(openServer(host));
+        writeToClient(sockfd);
+        clientsSockfd.push_back(sockfd);
     }
 
     vector<int> getClientSockfd() const{

@@ -16,6 +16,10 @@ public:
         command = c;
     }
 
+    ~CommandExpression() {
+        delete command;
+    }
+
     virtual double calculate() {
         command->doCommand(arguments);
         return 0;

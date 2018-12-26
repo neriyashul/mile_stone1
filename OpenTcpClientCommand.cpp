@@ -2,7 +2,7 @@
 // Created by neriya on 12/23/18.
 //
 
-#include "OpenTcpCommand.h"
+#include "OpenTcpClientCommand.h"
 
 /**
      * The function connect a client to some server.
@@ -61,28 +61,29 @@ void OpenTcpCommand::writeToServer(int sockfd)  {
         throw "there is no connection to server";
     }
     char buffer[256];
-    printf("Please enter the message: ");
+    while (strcmp(buffer, "exit") != 0) {
+        printf("Please enter the message: ");
 
-    bzero(buffer,256);
-    fgets(buffer,255,stdin);
-    strcat(buffer, "\r\n");
+        bzero(buffer, 256);
+        fgets(buffer, 255, stdin);
+        strcat(buffer, "\r\n");
 
-    /* Send message to the server */
-    int n = write(sockfd, buffer, strlen(buffer));
+        /* Send message to the server */
+        int n = write(sockfd, buffer, strlen(buffer));
 
-    if (n < 0) {
-        perror("ERROR writing to socket");
-        exit(1);
+        if (n < 0) {
+            perror("ERROR writing to socket");
+            exit(1);
+        }
+
+        /* Now read server response */
+        bzero(buffer, 256);
+        n = read(sockfd, buffer, 255);
+
+        if (n < 0) {
+            perror("ERROR reading from socket");
+            exit(1);
+        }
+        printf("%s\n", buffer);
     }
-
-    /* Now read server response */
-    bzero(buffer,256);
-    n = read(sockfd, buffer, 255);
-
-    if (n < 0) {
-        perror("ERROR reading from socket");
-        exit(1);
-    }
-
-    printf("%s\n",buffer);
 }
