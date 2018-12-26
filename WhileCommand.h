@@ -7,17 +7,13 @@
 
 class WhileCommand : public ConditionParserCommand {
 public:
-    virtual void doCommand(const vector<string>& v) {
-        vector<vector<string>> condVec = createConditionVec(v);
+    virtual void doCommand(vector<string>& v) {
+        vector<string> strVec = conditionHandle(v);
 
-        string l = combineStrings(condVec[0]);
-        string r = combineStrings(condVec[2]);
-        Expression* left = expFromShuntingYard(l);
-        Expression* right = expFromShuntingYard(r);
-        string oper = combineStrings(condVec[1]);
+        Expression* left = expFromShuntingYard(strVec[0]);
+        Expression* right = expFromShuntingYard(strVec[2]);
 
-
-        while (isConditionSatisfy(oper.c_str(), left, right)) {
+        while (isConditionSatisfy(strVec[1].c_str(), left, right)) {
             callToParser();
         }
     }

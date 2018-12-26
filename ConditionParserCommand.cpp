@@ -28,7 +28,7 @@ bool isIfOperator (char c) {
     }
 }
 
-string ConditionParserCommand::createStrLeftRight(vector<string> strs) {
+string ConditionParserCommand::combineStrings(vector<string> strs) {
     string str;
     for (string& s: strs) {
         str += s;
@@ -64,7 +64,6 @@ vector<vector<string>> ConditionParserCommand::createConditionVec(const vector<s
             return ret;
         }
     }
-
     // enter the strings into vector
     vector<vector<string>> ret;
     vector<string> r;
@@ -72,6 +71,20 @@ vector<vector<string>> ConditionParserCommand::createConditionVec(const vector<s
     ret.push_back(operatorStr);
     ret.push_back(r);
     return ret;
+}
+
+
+vector<string> ConditionParserCommand::conditionHandle(const vector<string>& v) {
+    vector<vector<string>> condVec = createConditionVec(v);
+    addToSegment(v);
+    string left = combineStrings(condVec[0]);
+    string oper = combineStrings(condVec[1]);
+    string right = combineStrings(condVec[2]);
+    vector<string> strVector;
+    strVector.push_back(left);
+    strVector.push_back(oper);
+    strVector.push_back(right);
+    return strVector;
 }
 
 
@@ -131,4 +144,16 @@ bool ConditionParserCommand::isConditionSatisfy(
                 return false;
         }
     }
+}
+
+void ConditionParserCommand::addToSegment(vector<string> &strVec) {
+    unsigned i = 0;
+    for ( ; i < strVec.size(); ++i) {
+        if (!strcmp(strVec[i].c_str(), STR_END_OF_LINE)) {
+            break;
+        }
+    }
+    vector<string> dummy(strVec.size() - i);
+    inSegment = dummy;
+    copy(strVec.begin() + i, strVec.end(), inSegment.begin());
 }

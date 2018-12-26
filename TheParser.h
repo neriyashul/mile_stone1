@@ -2,8 +2,8 @@
 // Created by neriya on 12/23/18.
 //
 
-#ifndef MILE_STONE1_NER_H
-#define MILE_STONE1_NER_H
+#ifndef MILE_STONE1_THEPARSER_H
+#define MILE_STONE1_THEPARSER_H
 
 
 
@@ -16,20 +16,21 @@
 #include "OpenTcpClientCommand.h"
 #include "OpenTcpServer.h"
 #include "IfCommand.h"
+#include "ConditionParserCommand.h"
 #include "Enterc.h"
 
 #include <unordered_map>
 #include <string.h>
-#include <pthread.h>
 #include <thread>
 
 using namespace std;
 
 #define STR_END_OF_LINE ";"
+class ConditionParserCommand;
 
 class Parser {
     unordered_map<const string, const int> expressionMap;
-    vector <string> names = {"/instrumentation/airspeed-indicator/indicated-speed-kt",
+   /* vector <string> names = {"/instrumentation/airspeed-indicator/indicated-speed-kt",
                              "/instrumentation/altimeter/indicated-altitude-ft",
                              "/instrumentation/altimeter/pressure-alt-ft",
                              "/instrumentation/attitude-indicator/indicated-pitch-deg",
@@ -51,7 +52,7 @@ class Parser {
                              "/controls/flight/rudder",
                              "/controls/flight/flaps",
                              "/controls/engines/engine/throttle",
-                             "/engines/engine/rpm"};
+                             "/engines/engine/rpm"}; */
 
 public:
 
@@ -135,4 +136,4 @@ public:
 };
 
 
-#endif //MILE_STONE1_NER_H
+#endif //MILE_STONE1_THEPARSER_H

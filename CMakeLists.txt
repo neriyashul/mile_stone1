@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 project(mile_stone1)
 
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
 
 include_directories(.)
 include_directories(cmake-build-debug)
@@ -22,5 +23,6 @@ add_executable(mile_stone1
         ShuntingYard.h
         ShuntingYard.cpp
         UnaryExpression.h
-        ner.h
-        WhileCommand.h OpenClientCommand.h OpenTcpClient.cpp OpenTcpClient.h OpenTcpServer.cpp OpenTcpServer.h OpenServerCommand.h)
+        OpenServerCommand.h
+        TheParser.h
+        WhileCommand.h OpenClientCommand.h OpenTcpClientCommand.cpp OpenTcpClientCommand.h OpenTcpServer.cpp OpenTcpServer.h SleepCommand.h ReadData.cpp ReadData.h Interpreter.cpp Interpreter.h LexerParser.cpp Enterc.h IfCommand.h)

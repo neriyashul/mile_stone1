@@ -10,13 +10,13 @@
 
 class IfCommand : public ConditionParserCommand {
 public:
-    virtual void doCommand(const vector<string>& v) {
-        vector<string> condVec = createConditionVec(v);
+    virtual void doCommand(vector<string>& v) {
+        vector<string> strVec = conditionHandle(v);
 
-        Expression* left = expFromShuntingYard(condVec[0]);
-        Expression* right = expFromShuntingYard(condVec[2]);
+        Expression* left = expFromShuntingYard(strVec[0]);
+        Expression* right = expFromShuntingYard(strVec[2]);
 
-        if (isConditionSatisfy(condVec[1].c_str(), left, right)) {
+        if (isConditionSatisfy(strVec[1].c_str(), left, right)) {
             callToParser();
         }
     }

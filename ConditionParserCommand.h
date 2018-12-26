@@ -3,15 +3,18 @@
 
 #include "Command.h"
 #include <vector>
+#include <string.h>
 #include "Expression.h"
 #include "ShuntingYard.h"
+#include "TheParser.h"
 
 #define STR_END_OF_CONDITION "{"
+#define STR_END_OF_LINE ";"
 
 class Parser;
 
 class ConditionParserCommand : public Command {
-protected:
+
     vector<string> inSegment; // everything that after the condition.
 public:
 
@@ -76,13 +79,22 @@ public:
   */
  virtual void doCommand(vector<string>&) = 0;
 
+
+    /**
+        * the function handle to condition and return vector of string with:
+        * 1) left size of the operator in the condition.
+        * 2) operator
+        * 3) right size of the operator in the condition.
+        * @param v - vector<string>.
+        * @return vector<string>.
+        */
+    vector<string> conditionHandle(const vector<string>& v);
+
     /**
     * The function insert string to inSegmaent.
     * @param str.
     */
- void AddStringInSegment(string& str) {
-     inSegment.push_back(str);
- }
+ void addToSegment(vector<string>& strVec);
 
 };
 
