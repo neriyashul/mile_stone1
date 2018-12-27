@@ -1,6 +1,6 @@
 #ifndef MILE_STONE1_INTERPRETER_H
 #define MILE_STONE1_INTERPRETER_H
-
+/*
 
 #include <string>
 #include <list>
@@ -31,5 +31,5 @@ public:
 
     void parser(vector<string> input);
 };
-
+*/
 #endif //MILE_STONE1_INTERPRETER_H

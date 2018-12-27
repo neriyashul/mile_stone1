@@ -7,7 +7,6 @@
 #include "Expression.h"
 #include "ShuntingYard.h"
 #include "TheParser.h"
-#include "WhileCommand.h"
 
 #define STR_END_OF_CONDITION "{"
 #define STR_END_OF_LINE ";"

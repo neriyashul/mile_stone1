@@ -25,4 +25,4 @@ add_executable(mile_stone1
         UnaryExpression.h
         OpenServerCommand.h
         TheParser.h
-        WhileCommand.h OpenClientCommand.h OpenTcpClientCommand.cpp OpenTcpClientCommand.h OpenTcpServer.cpp OpenTcpServer.h SleepCommand.h ReadData.cpp ReadData.h Interpreter.cpp Interpreter.h LexerParser.cpp Enterc.h IfCommand.h)
+        WhileCommand.h OpenClientCommand.h OpenTcpClientCommand.cpp OpenTcpClientCommand.h OpenTcpServer.cpp OpenTcpServer.h SleepCommand.h ReadData.cpp ReadData.h Interpreter.cpp Interpreter.h LexerParser.cpp Enterc.h IfCommand.h Exit.h)

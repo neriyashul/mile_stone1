@@ -2,7 +2,6 @@
 // Created by neriya on 12/23/18.
 //
 
-
 #ifndef MILE_STONE1_THEPARSER_H
 #define MILE_STONE1_THEPARSER_H
 
@@ -10,17 +9,18 @@
 
 #include "Expression.h"
 #include "CommandExpression.h"
+
 #include "SleepCommand.h"
 
 
 #include "OpenTcpClientCommand.h"
 #include "OpenTcpServer.h"
 #include "Enterc.h"
+#include "Exit.h"
+
 #include <unordered_map>
 #include <string.h>
 #include <thread>
-
-
 
 using namespace std;
 
@@ -29,7 +29,7 @@ using namespace std;
 class ConditionParserCommand;
 
 class Parser {
-    unordered_map<const string, const int> expressionMap;
+    unordered_map<string, int> expressionMap;
    /* vector <string> names = {"/instrumentation/airspeed-indicator/indicated-speed-kt",
                              "/instrumentation/altimeter/indicated-altitude-ft",
                              "/instrumentation/altimeter/pressure-alt-ft",
@@ -85,13 +85,13 @@ public:
         expressionMap.insert(pair<string, int>("enterc", 9));
     }
 
-    Command* createCommand(const vector <string> &line, int expressNumInMap) {
+    Command* createCommand(int expressNumInMap) {
         switch (expressNumInMap) {
             case 1:
                 return new OpenTcpServer();
             case 2:
                 return new OpenTcpCommand();
-            case 3:
+          /*  case 3:
                 return Var();
             case 4:
                 return new PrintCommand();
@@ -103,31 +103,33 @@ public:
                 return new IfCommand();
             case 8:
                 return new WhileCommand();
-            case 9:
+            */case 9:
                 return new Enterc();
+            case 10:
+                return new Exit();
             default:
                 throw "invalid operation";
         }
     }
 
 
-    void parse(const vector<string>& vectorStr) {
+    void parse(vector<string>& vectorStr) {
         int sockfd = -1;
         bool isNewLine = true;
-        Command *command;
+        Command *command = nullptr;
         vector<string> arguments;
 
-        for (const string &str : vectorStr) {
+        for (string &str : vectorStr) {
 
             if (isNewLine) {
                 // create new command according to the command in the line.
-                command = createCommand(str, expressionMap.at());
+                command = createCommand(expressionMap.at(str));
                 isNewLine = false;
             } else {
                 arguments.push_back(str);
             }
 
-            if (!strcmp(str.c_str(),STR_END_OF_LINE)) {
+            if (!strcmp(str.c_str(),STR_END_OF_LINE) && command != nullptr) {
                 isNewLine = true;
                 command->doCommand(arguments);
             }

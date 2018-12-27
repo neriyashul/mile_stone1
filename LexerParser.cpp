@@ -1,5 +1,5 @@
 #include "Interpreter.h"
-
+/*
 
     vector<string> Lexer::lexer(string input) {
         int i = 0;
@@ -92,3 +92,4 @@
         return words;
     }
 };
+ */

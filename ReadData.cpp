@@ -2,7 +2,7 @@
 
 //Interpreter interpreter;
 //ifstream infile;
-
+/*
 void ReadData::read_Data_From_File(string fileName) {
     Interpreter interpreter;
     ifstream infile;
@@ -20,9 +20,9 @@ void ReadData::read_Data_From_File(string fileName) {
     //   interpreter.parser(interpreter.lexer(input));
 }
 
+*/
 
-
-
+/*
 void readFromConsole(){
     Interpreter interpreter;
     string input;
@@ -42,4 +42,4 @@ void readFromConsole(){
     // interpreter.parser(interpreter.lexer(input));
 
 
-}
+}*/

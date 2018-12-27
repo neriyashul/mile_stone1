@@ -8,8 +8,6 @@
 
 #include "ConditionParserCommand.h"
 
-class ConditionParserCommand;
-
 class IfCommand : public ConditionParserCommand {
 public:
     virtual void doCommand(vector<string>& v) {

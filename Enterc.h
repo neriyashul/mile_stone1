@@ -16,8 +16,10 @@ public:
      * @param v  - vector<string>&.
      */
     void doCommand(vector<string>& v) override {
-        char dummy;
-        cin >> dummy;
+        char c;
+        cin >> c;
+        // catch "\n"
+        getchar();
     }
 };
 
