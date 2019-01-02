@@ -2,7 +2,8 @@
 // Created by neriya on 12/23/18.
 //
 
-#include "OpenTcpClientCommand.h"
+#include "TcpClient.h"
+using  namespace std;
 
 /**
      * The function connect a client to some server.
@@ -11,7 +12,7 @@
      * @param host - const char*.
      * @return int.
      */
-int OpenTcpCommand::connectClient(const char *ip, const char *host) {
+int TcpClient::connectClient(const char *ip, const char *host) {
 
     int sockfd, portno;
     struct sockaddr_in serv_addr;
@@ -53,31 +54,21 @@ int OpenTcpCommand::connectClient(const char *ip, const char *host) {
      *
      * @param sockfd -  int.
      */
-void OpenTcpCommand::writeToServer(int sockfd)  {
-    /* ask for a message from the user, this message
-       * will be read by server
+void TcpClient::writeToServer(int sockfd)  {
+
+    /* ask for message from the user, this message
+    *  will be read by server
     */
     if (sockfd < 0) {
         throw "there is no connection to server";
     }
     char buffer[256];
     while (strcmp(buffer, "exit") != 0) {
-        printf("Please enter the message: ");
+    }
 
-        bzero(buffer, 256);
-        fgets(buffer, 255, stdin);
-        strcat(buffer, "\r\n");
-
-        /* Send message to the server */
-        int n = write(sockfd, buffer, strlen(buffer));
-
-        if (n < 0) {
-            perror("ERROR writing to socket");
-            exit(1);
-        }
-
+        /*
         /* Now read server response */
-        bzero(buffer, 256);
+        /*bzero(buffer, 256);
         n = read(sockfd, buffer, 255);
 
         if (n < 0) {
@@ -85,5 +76,27 @@ void OpenTcpCommand::writeToServer(int sockfd)  {
             exit(1);
         }
         printf("%s\n", buffer);
+         */
+    }
+
+    void TcpClient::sendMassage(int sockfd, char* msg) {
+        while (true) {
+            if (isGotMassage) {
+                /* printf("Please enter the message: ");
+
+                 bzero(buffer, 256);
+                 fgets(buffer, 255, stdin);
+                 */
+               strcat(msg, "\r\n");
+
+                /* Send message to the server */
+                int n = (int) write(sockfd, msg, strlen(msg));
+
+                if (n < 0) {
+                    perror("ERROR writing to socket");
+                    exit(1);
+                }
+            }
+        }
     }
 }

@@ -4,13 +4,13 @@
 #include <string>
 #include <vector>
 
-using namespace std;
+
 
 // interface
 class Command {
 public:
 
-    virtual void doCommand(vector<string>&) = 0;
+    virtual void doCommand(std::vector<std::string>& v) = 0;
 };
 
 

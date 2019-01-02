@@ -15,9 +15,9 @@ public:
      * the function wait to any char.
      * @param v  - vector<string>&.
      */
-    void doCommand(vector<string>& v) override {
+    void doCommand(std::vector<std::string>& v) override {
         char c;
-        cin >> c;
+        std::cin >> c;
         // catch "\n"
         getchar();
     }

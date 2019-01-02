@@ -2,12 +2,12 @@
 // Created by neriya on 12/23/18.
 //
 
-#ifndef MILE_STONE1_OPENTCPCLIENTCOMMAND_H
-#define MILE_STONE1_OPENTCPCLIENTCOMMAND_H
+#ifndef MILE_STONE1_TCPCLIENT_H
+#define MILE_STONE1_TCPCLIENT_H
 
-#include "OpenClientCommand.h"
+#include "ClientCommand.h"
 
-class OpenTcpCommand : public OpenClientCommand {
+class TcpClient : public ClientCommand {
 
         public:
 
@@ -27,6 +27,9 @@ class OpenTcpCommand : public OpenClientCommand {
          * @param sockfd -  int.
          */
         virtual void writeToServer(int);
+
+private:
+        void sendMassage(int);
 };
 
 

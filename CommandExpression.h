@@ -10,7 +10,7 @@
 
 class CommandExpression : public Expression {
     Command* command;
-    vector<string> arguments;
+    std::vector<std::string> arguments;
 public:
     CommandExpression (Command* c) {
         command = c;

@@ -11,8 +11,12 @@
 class Num : public Expression {
     double num;
 public:
-    Num(std::string& str)  {
+    explicit Num(std::string& str)  {
         num = std::stod(str);
+    }
+
+    explicit Num(double val) {
+        num = val;
     }
 
     double calculate() override {

@@ -1,9 +1,5 @@
-//
-// Created by neriya on 12/23/18.
-//
-
-#ifndef MILE_STONE1_OPENCLIENTCOMMAND_H
-#define MILE_STONE1_OPENCLIENTCOMMAND_H
+#ifndef MILE_STONE1_CLIENTCOMMAND_H
+#define MILE_STONE1_CLIENTCOMMAND_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,7 +12,9 @@
 #include <string.h>
 #include "Command.h"
 
-class OpenClientCommand : public Command {
+class ClientCommand : public Command {
+protected:
+    bool isGotMassage = false;
     int clientSockfd = -1;
 public:
     /**
@@ -24,7 +22,7 @@ public:
      *
      * @param v -  vector<string>&.
      */
-    void doCommand(vector<string>& v) override {
+    void doCommand(std::vector<std::string>& v) override {
         if (v.size() != 2) {
             throw "wrong numbers of arguments";
         }

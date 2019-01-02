@@ -4,17 +4,15 @@
 #include <stack>
 #include <algorithm>
 #include "Expression.h"
-#include "AddExp.h"
-#include "MulExp.h"
-#include "DivExp.h"
-#include "MinusExp.h"
-#include "Num.h"
+#include "MathExpressions.h"
+#include "Var.h"
 
 
 using namespace std;
 
 
 class ShuntingYard {
+    std::unordered_map<std::string,Var*>* variables;
 
     enum priorityOperator {
         openBracket, add, sub = add, mul, divide = mul
@@ -34,11 +32,19 @@ class ShuntingYard {
     }
 
     /**
-     * The function return if the string is binary expression.
-     * @param strExpression - string&.
+     * the function return if the enter string is a name of variable.
+     * @param name - string&.
      * @return bool.
      */
-    bool IsBinaryOperator(string &strExpression);
+    bool isVar(string& name) {
+        return (variables->count(name) > 0);
+    }
+
+    /**
+     * The function return if the string is binary expression.
+     *
+     */
+    bool isBinaryOperator(unsigned, string&, string&);
 
 
     /**
@@ -55,7 +61,7 @@ class ShuntingYard {
      * @param strExpression - string&.
      * @return bool.
      */
-    bool IsNumber(string &strExpression);
+    bool isDoubleNumber(const string &);
 
 
     /**
@@ -72,21 +78,24 @@ class ShuntingYard {
      * The function gets a string and return
      * deque with string acoording to ShuntionYard algorithm.
      *
-     * @param str - string of expression.
+     * @param vecStr - vector<string> of expression.
      * @return deque<string>.
      */
-    deque<string> shuntingYardAlgorithm(string str);
+    deque<string> shuntingYardAlgorithm(vector<string>& vecStr);
 
 public:
+    explicit ShuntingYard(std::unordered_map<std::string,Var*>* vars) {
+        variables = vars;
+    }
     /**
      * The function gets a string of expression and return Expression in accordance.
      * @param strExpress - string&.
      * @return Expression*.
      */
-    Expression* expressionFromString(string& strExpress) {
-        if (strExpress.empty()) {
+    Expression* expressionFromString(vector<string>& expression) {
+        if (expression.empty()) {
             return nullptr;
         }
-        return postfixCalculator(shuntingYardAlgorithm(strExpress));
+        return postfixCalculator(shuntingYardAlgorithm(expression));
     }
 };

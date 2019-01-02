@@ -11,7 +11,7 @@
 
 class SleepCommand : public Command {
 public:
-    virtual void doCommand(vector<string> &v) {
+    virtual void doCommand(std::vector<std::string> &v) {
         if (v.size()!= 1) {
             throw "wrong numbers of arguments";
         }

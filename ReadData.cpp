@@ -1,9 +1,11 @@
+//
+// Created by yedaya on 12/25/18.
+//
+
+
 #include "ReadData.h"
 
-//Interpreter interpreter;
-//ifstream infile;
-/*
-void ReadData::read_Data_From_File(string fileName) {
+void ReadData::readFromFile(string fileName) {
     Interpreter interpreter;
     ifstream infile;
 
@@ -17,29 +19,42 @@ void ReadData::read_Data_From_File(string fileName) {
     infile.close();
 
     // use lexer and interpreter
-    //   interpreter.parser(interpreter.lexer(input));
+    interpreter.parse(interpreter.lexer(input));
 }
 
-*/
-
-/*
-void readFromConsole(){
+void ReadData::readFromConsole() {
     Interpreter interpreter;
     string input;
     string line;
 
-    cout << "enter data (to finish type 'quitdata')" << endl;
+    cout << "type your code (to finish type 'exit')" << endl;
 
+    unsigned numOfOpenScope = 0;
+    unsigned numOfCloseScope = 0;
     while (true) {
         // get line each time
         getline(cin, line);
+
         // read until type 'quit'
-        if (line == "quitdata") { break; }
+        if (line == "exit") { break; }
+
+        // if in the new line there is new scope add it.
+        if (line.find_first_of('{') != string::npos) {
+            ++numOfOpenScope;
+        // if in the new line there is end of scope add it.
+        } else if (line.find_first_of('}') != string::npos) {
+            ++numOfCloseScope;
+        }
+
         // add '\n' after each line
         input += line + "\n";
+
+        // if there is open scope, continue to read.
+        if (numOfOpenScope != numOfCloseScope) {
+            continue;
+        }
+
+        // use lexer and interpreter
+        interpreter.parse(interpreter.lexer(input));
     }
-
-    // interpreter.parser(interpreter.lexer(input));
-
-
-}*/
+}

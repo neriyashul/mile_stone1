@@ -1,22 +1,27 @@
-#ifndef MILE_STONE1_INTERPRETER_H
-#define MILE_STONE1_INTERPRETER_H
-/*
+//
+// Created by yedaya on 12/25/18.
+//
 
-#include <string>
+#ifndef UNTITLED1_INTERPRETER_H
+#define UNTITLED1_INTERPRETER_H
+
+
+#include <string.h>
 #include <list>
 #include <map>
 #include <iostream>
 
-#include "VarData.h"
+#include "VarDataCommand.h"
 #include "Command.h"
 #include "CommandFactory.h"
 #include "ExpsCollection.h"
 #include "Threads.h"
 #include "CommandExpression.h"
-#include "LexerParser.h"
+#include "Lexer.h"
+#include "Parser.h"
 
 class Interpreter {
-    map<string, VarData *> symTbl;
+    map<string, VarDataCommand *> symTbl;
     CommandFactory *factory;
     ExpsCollection *expressions;
     map<string, string> codeMap;
@@ -29,7 +34,8 @@ public:
 
     vector<string> lexer(string input);
 
-    void parser(vector<string> input);
+    void parse(vector<string> input);
 };
-*/
-#endif //MILE_STONE1_INTERPRETER_H
+
+
+#endif //UNTITLED1_INTERPRETER_H

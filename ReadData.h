@@ -1,26 +1,30 @@
-#ifndef MILE_STONE1_READDATA_H
-#define MILE_STONE1_READDATA_H
+//
+// Created by yedaya on 12/25/18.
+//
+
+#ifndef UNTITLED1_READCODE_H
+#define UNTITLED1_READCODE_H
 
 
-#include <string>
 #include <list>
 #include <vector>
 #include <iostream>
-#include <cstring>
+#include <string.h>
 #include <fstream>
 #include <sstream>
 
 #include "Interpreter.h"
 
-using namespace std;
+
+
+
 
 class ReadData {
 
 public:
-    void read_Data_From_File(string fileName);
+    void readFromFile(string fileName);
 
-    void read_From_Console();
+    void readFromConsole();
 };
 
-
-#endif //MILE_STONE1_READDATA_H
+#endif //UNTITLED1_READCODE_H

@@ -1,14 +1,18 @@
 #include <netinet/in.h>
 #include <strings.h>
 #include <unistd.h>
-#include "OpenTcpServer.h"
+#include <string.h>
+#include <thread>
+#include "TcpServer.h"
+
+using namespace std;
 
 /**
      * The function open new server.
      * @param host - int.
      * @return int - sockfd.
      */
-int OpenTcpServer::openServer(int host) {
+int TcpServer::openServer(int host) {
     int sockfd, portno;
     struct sockaddr_in serv_addr, cli_addr;
 
@@ -41,7 +45,7 @@ int OpenTcpServer::openServer(int host) {
      * @param sockfd - int.
      * @return int - sockfd.
      */
-int OpenTcpServer::connectToClient(int sockfd) {
+int TcpServer::connectToClient(int sockfd) {
     struct sockaddr_in cli_addr;
     int newsockfd, clilen;
     /* Now start listening for the clients, here process will
@@ -62,29 +66,49 @@ int OpenTcpServer::connectToClient(int sockfd) {
     return newsockfd;
 }
 
+
+
+
+
 /**
      * The function write to client in the sockfd that gets.
      * @param sockfd - int.
      */
-void OpenTcpServer::writeToClient(int sockfd) {
+void TcpServer::readFromClient(int sockfd, unsigned rate) {
+    // time: rate per second (1000 millisecond):
+    rate = (1/rate * 1000);
+
     /* start communicating */
     int n;
-    char buffer[256];
+    int dummy = 1;
+    char buffer [256] ;
     bzero(buffer,256);
-    n = static_cast<int>(read(sockfd, buffer, 255));
+    while (true) {
+        n = static_cast<int>(read(sockfd, buffer, 255));
+        if (!strcmp(buffer, STR_EXIT)) {
+            return;
+        }
 
-    if (n < 0) {
-        perror("ERROR reading from socket");
-        exit(1);
-    }
+        this_thread::sleep_for(chrono::milliseconds(rate));
 
-    printf("Here is the message: %s\n",buffer);
+        // lock mutex.
+        lock_guard<mutex> lock(*mtx);
+        updateMap(buffer);
 
-    /* Write a response to the client */
-    n = static_cast<int>(write(sockfd, "I got your message\n", 18));
+        if (n < 0) {
+            perror("ERROR reading from socket");
+            exit(1);
+        }
 
-    if (n < 0) {
-        perror("ERROR writing to socket");
-        exit(1);
+        //printf("%d Here is the message: %s\n",dummy++, buffer);
+
+
+        /* Write a response to the client */
+        n = static_cast<int>(write(sockfd, "I got your message\n", 18));
+
+        if (n < 0) {
+            perror("ERROR writing to socket");
+            exit(1);
+        }
     }
 }

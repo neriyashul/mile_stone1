@@ -2,7 +2,10 @@
 
 
 /**
- * the func return as string the all condition
+ * the function return the condition in the string
+ *
+ * @param v - const vector<string>&
+ * @return vector<string>
  */
 vector<string> conditionInString(const vector<string>& v) {
     vector<string> cond;
@@ -15,7 +18,12 @@ vector<string> conditionInString(const vector<string>& v) {
 }
 
 
-bool isIfOperator (char c) {
+/**
+ * the function return if the insert char is condition operator.
+ * @param c - char
+ * @return bool.
+ */
+bool isConditionOperator (char c) {
     switch (c) {
         case '=':
         case '<':
@@ -27,9 +35,16 @@ bool isIfOperator (char c) {
     }
 }
 
-string ConditionParserCommand::combineStrings(vector<string> strs) {
+/**
+ *
+ * the function get vector of string
+ * and return the all string as a long one.
+ * @param strs - vector<string>&.
+ * @return string.
+ */
+string ConditionParserCommand::combineStrings(const vector<string>& strs) {
     string str;
-    for (string& s: strs) {
+    for (const string& s: strs) {
         str += s;
     }
     return str;
@@ -44,13 +59,16 @@ string ConditionParserCommand::combineStrings(vector<string> strs) {
  * @param v - vector<string>
  * @return vector<vector<string>>.
  */
-vector<vector<string>> ConditionParserCommand::createConditionVec(vector<string>& v) {
+vector<vector<string>> ConditionParserCommand
+            ::createConditionVec(const vector<string>& v) {
+
     vector<string> operatorStr;
     vector<string> condStr =  conditionInString(v);
-    size_t pos = 0;
+
     unsigned long size = condStr.size();
+
     for (unsigned i = 0; i < size; ++i) {
-        if (isIfOperator(condStr[i].at(0))) {
+        if (isConditionOperator(condStr[i].at(0))) {
             vector<string> leftOper(i - 1);
             vector<string> rightOper(size - i);
             operatorStr.push_back(condStr[i]);
@@ -65,20 +83,29 @@ vector<vector<string>> ConditionParserCommand::createConditionVec(vector<string>
     }
     // enter the strings into vector
     vector<vector<string>> ret;
+    // create an empty vector for the right operand.
     vector<string> r;
+    // the left operand is the inserted v.
     ret.push_back(v);
     ret.push_back(operatorStr);
     ret.push_back(r);
     return ret;
 }
 
+/**
+ * the function handle with the condition.
+ * the func gets vector of string and return vector of string
+ * @param v
+ * @return
+ */
+vector<string> ConditionParserCommand
+           ::conditionHandle(const vector<string>& v) {
 
-vector<string> ConditionParserCommand::conditionHandle(vector<string>& v) {
-    vector<vector<string>> condVec = createConditionVec(v);
-    addToSegment(v);
-    string left = combineStrings(condVec[0]);
-    string oper = combineStrings(condVec[1]);
-    string right = combineStrings(condVec[2]);
+    vector<vector<string>> conditionVec = createConditionVec(v);
+    addToScope(v);
+    string left = combineStrings(conditionVec[0]);
+    string oper = combineStrings(conditionVec[1]);
+    string right = combineStrings(conditionVec[2]);
     vector<string> strVector;
     strVector.push_back(left);
     strVector.push_back(oper);
@@ -107,14 +134,14 @@ vector<string> ConditionParserCommand::conditionHandle(vector<string>& v) {
  * @return bool.
  */
 bool ConditionParserCommand::isConditionSatisfy(
-        const char* condition, Expression* exp1, Expression* exp2) {
+        const string& condition, Expression* exp1, Expression* exp2) {
 
     // if there is no condition - return exp1->calc.
-    if (!strcmp(condition, "")){
+    if (condition.empty()){
         return (bool) exp1->calculate();
     }
     // if there is 2 char in the condition:
-    if (condition[1] == '=') {
+    if (condition.size() > 1 && condition[1] == '=') {
         switch (condition[0]) {
             // case !=
             case '!':
@@ -145,14 +172,32 @@ bool ConditionParserCommand::isConditionSatisfy(
     }
 }
 
-void ConditionParserCommand::addToSegment(vector<string> &strVec) {
-    unsigned i = 0;
-    for ( ; i < strVec.size(); ++i) {
-        if (!strcmp(strVec[i].c_str(), STR_END_OF_LINE)) {
-            break;
+void ConditionParserCommand::addToScope(const vector<string> &strVec) {
+    unsigned numOfOpenerScope = 0;
+    unsigned numOfCloserScope = 0;
+    unsigned long startScope = 1;
+    unsigned long endScope = 0;
+
+    unsigned long i = 0;
+    try {
+        for (; numOfOpenerScope == numOfCloserScope; ++i) {
+            if (strVec[i] == STR_START_OF_SCOPE) {
+                if (numOfOpenerScope == 1) {
+                    startScope = i;
+                    continue;
+                }
+                ++numOfOpenerScope;
+            } else if (strVec[i] == STR_END_OF_SCOPE) {
+                ++numOfCloserScope;
+            }
         }
+        endScope = i;
+    } catch (...) {
+        throw out_of_range("the num of open and close scope not fit");
     }
-    vector<string> dummy(strVec.size() - i);
-    inSegment = dummy;
-    copy(strVec.begin() + i, strVec.end(), inSegment.begin());
+
+    vector<string> dummy(endScope - startScope);
+    inScope = dummy;
+    copy(strVec.begin() + startScope,
+            strVec.begin() + endScope, inScope.begin());
 }

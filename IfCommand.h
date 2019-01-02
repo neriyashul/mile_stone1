@@ -1,7 +1,3 @@
-//
-// Created by neriya on 12/26/18.
-//
-
 #ifndef MILE_STONE1_IFCOMMAND_H
 #define MILE_STONE1_IFCOMMAND_H
 
@@ -16,7 +12,7 @@ public:
         Expression* left = expFromShuntingYard(strVec[0]);
         Expression* right = expFromShuntingYard(strVec[2]);
 
-        if (isConditionSatisfy(strVec[1].c_str(), left, right)) {
+        if (isConditionSatisfy(strVec[1], left, right)) {
             callToParser();
         }
     }

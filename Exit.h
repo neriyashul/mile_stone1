@@ -10,7 +10,7 @@
 
 class Exit : public Command {
 public:
-    virtual void doCommand(vector<string>&) {
+    virtual void doCommand(std::vector<std::string>& v) {
         exit(1);
     }
 };

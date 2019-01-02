@@ -11,7 +11,6 @@
 class AddExp: public BinaryExpression{
 public:
     AddExp(Expression* exp1, Expression* exp2) : BinaryExpression(exp1, exp2) {}
-
         double calculate() override {
             return (left->calculate()+right->calculate());
         }

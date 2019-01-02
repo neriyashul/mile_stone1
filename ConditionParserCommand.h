@@ -6,15 +6,17 @@
 #include <string.h>
 #include "Expression.h"
 #include "ShuntingYard.h"
-#include "TheParser.h"
+//#include "Parser.h"
 
 #define STR_END_OF_CONDITION "{"
-#define STR_END_OF_LINE ";"
+#define STR_START_OF_SCOPE "{"
+#define STR_END_OF_SCOPE "}"
+
 
 
 class ConditionParserCommand : public Command {
 
-    vector<string> inSegment; // everything that after the condition.
+    vector<string> inScope; // everything that after the condition.
 public:
 
     /**
@@ -36,14 +38,14 @@ public:
  * @param exp2 - Expression.
  * @return bool.
  */
- bool isConditionSatisfy(const char* condition, Expression* exp1, Expression* exp2);
+ bool isConditionSatisfy(const string& condition, Expression* exp1, Expression* exp2);
 
  /**
   * the function parse all the things inside the condition.
   */
  void callToParser() {
-     Parser p;
-     p.parse(inSegment);
+    // Parser p;
+    // p.parse(inScope);
  }
 
 
@@ -52,7 +54,7 @@ public:
   * @param strs
   * @return
   */
-    string combineStrings(vector<string> strs);
+    string combineStrings(const vector<string>& strs);
 
  /**
   * The function gets a vector with string and return vector with:
@@ -62,11 +64,11 @@ public:
   * @param v - const vector<string>& v.
   * @return vector<string>&.
   */
- vector<vector<string>> createConditionVec(vector<string>& v);
+ vector<vector<string>> createConditionVec(const vector<string>& v);
 
 
 
- Expression* expFromShuntingYard(string& str) {
+ Expression* expFromShuntingYard(string str) {
      ShuntingYard s;
      return s.expressionFromString(str);
     };
@@ -87,13 +89,13 @@ public:
         * @param v - vector<string>.
         * @return vector<string>.
         */
-    vector<string> conditionHandle(vector<string>& v);
+    vector<string> conditionHandle(const vector<string>& v);
 
     /**
     * The function insert string to inSegmaent.
     * @param str.
     */
- void addToSegment(vector<string>& strVec);
+ void addToScope(const vector<string>&);
 
 };
 

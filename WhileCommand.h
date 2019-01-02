@@ -13,7 +13,7 @@ public:
         Expression* left = expFromShuntingYard(strVec[0]);
         Expression* right = expFromShuntingYard(strVec[2]);
 
-        while (isConditionSatisfy(strVec[1].c_str(), left, right)) {
+        while (isConditionSatisfy(strVec[1], left, right)) {
             callToParser();
         }
     }

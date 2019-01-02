@@ -1,20 +1,25 @@
 
 #include "ShuntingYard.h"
+#include "Num.h"
 
 /**
      * The function return if the string is binary expression.
      * @param strExpression - string&.
      * @return bool.
      */
-bool ShuntingYard::IsBinaryOperator(string &strExpression) {
+bool ShuntingYard::isBinaryOperator(unsigned index, string& str, string& prev) {
     {
-        if (strExpression.size() != 1) {
+        if (str.size() != 1) {
             return false;
         }
 
-        switch (strExpression.at(0)) {
-            case '+':
+        switch (str[0]) {
             case '-':
+                if (index < 1 || (!(isDoubleNumber(prev))
+                                        && !isVar(prev)) {
+                    return false;
+                }
+            case '+':
             case '*':
             case '/':
                 return true;
@@ -51,21 +56,22 @@ Expression* ShuntingYard::createBinabryExpression(string &oper,
 
 
 /**
-     * The function return if the string that insert is number.
+     * The function return if the string that insert is float/ double number.
      * @param strExpression - string&.
      * @return bool.
      */
-bool ShuntingYard::IsNumber(string &strExpression) {
-    unsigned long i = 0;
-    if (strExpression.empty())
+bool ShuntingYard::isDoubleNumber(const string &str) {
+    if (str.empty()) {
         return false;
-    else if (strExpression[0] == '-') {
-        ++i;
     }
-    for (; i < strExpression.size(); ++i) {
-        if ((strExpression[i] != '.')
-            && (strExpression[i] < '0' || strExpression[i] > '9'))
+
+    bool sawDot = false;
+    for (char c : str) {
+        // if c isn't digit nor first dot:
+        if (! (isdigit(c) || (c == '.' && !sawDot))) {
             return false;
+        }
+        sawDot = sawDot || (c == '.');
     }
     return true;
 }
@@ -80,37 +86,56 @@ bool ShuntingYard::IsNumber(string &strExpression) {
      */
 Expression* ShuntingYard::postfixCalculator(deque<string> strExpressions)  {
     //int EvaluatePostfix(string expression)
-    {
+
+        // check if there is minus which not operation.
+        bool isPrevMinus = false;
         stack<Expression *> numbers;
-
-        for (auto &strExpression : strExpressions) {
-
+        unsigned index = 0;
+        for (string& str : strExpressions) {
             // If character is operator, pop two elements from stack, perform operation and push the result back.
-            if (IsBinaryOperator(strExpression)) {
+            if (isBinaryOperator(index, str, strExpressions[index - 1])) {
                 // Pop two operands.
                 Expression *operand2 = numbers.top();
                 numbers.pop();
                 Expression *operand1 = numbers.top();
                 numbers.pop();
                 // Perform operation
-                Expression *result = createBinabryExpression(strExpression, operand1, operand2);
+                Expression *result = createBinabryExpression(str, operand1, operand2);
                 if (result == nullptr) {
                     throw "there is a problem with create binary expression";
                 }
                 //Push back result of operation on stack.
                 numbers.push(result);
-            } else if (IsNumber(strExpression)) {
-                numbers.push(new Num(strExpression));
+            } else if (isDoubleNumber(str)) {
+                if (isPrevMinus) {
+                    numbers.push(new MinusExp(new Num(0), (*variables)[str]));
+                    isPrevMinus = false;
+                } else {
+                    numbers.push(new Num(str));
+                }
+            } else if (isVar(str)) {
+                if (isPrevMinus) {
+                    numbers.push(new MinusExp(new Num(0), (*variables)[str]));
+                    isPrevMinus = false;
+                } else {
+                    numbers.push((*variables)[str]);
+                }
+            } else if (str == "-") {
+                isPrevMinus = true;
             }
+
+            ++index;
         }
 
-        // If expression is in correct format, the Stack will finally have one element. This will be the output.
+        // If expression is in correct format, the Stack will finally have one element.
+        // This will be the output.
         if (numbers.size() != 1) {
             throw "problem with the expression format";
         }
         return numbers.top();
-    }
+
 }
+
 
 
 /**
@@ -120,69 +145,62 @@ Expression* ShuntingYard::postfixCalculator(deque<string> strExpressions)  {
      * @param str - string of expression.
      * @return deque<string>.
      */
-deque<string> ShuntingYard::shuntingYardAlgorithm(string str) {
+deque<string> ShuntingYard::shuntingYardAlgorithm(vector<string>& vecStr) {
     map<char, priorityOperator> priorityMap;
     addPriorityOperator(priorityMap);
 
     deque<string> myQueue;
     stack<char> myStack;
 
-    string num;
-    bool isLastCharWasNum = false;
+    bool isPrevWasNumOrVar = false;
 
-    for (char currentChar : str) {
-        if (currentChar == ' ') {
+    for (string& currentstr : vecStr) {
+        if (currentstr.empty() || currentstr == " ") {
             continue;
         }
-        // if current char is number or '.':
-        if ((currentChar <= '9' && currentChar >= '0')
-            || currentChar == '.') {
-            isLastCharWasNum = true;
-            num += currentChar;
-            continue;
-
-        } else if (!num.empty()) { // if the previous chars was number and now isn't.
-            myQueue.push_back(num);
-            num = "";
-        }
-
-
-        // if the next num is negative:
-        if (currentChar == '-' && !isLastCharWasNum) {
-            num += "-";
-            isLastCharWasNum = false;
+        // currentStr is var or number:
+        if (isDoubleNumber(currentstr) || isVar(currentstr)) {
+            isPrevWasNumOrVar = true;
+            myQueue.push_back(currentstr);
             continue;
         }
 
-        isLastCharWasNum = false;
+        // if the next num that will be next is negative:
+        if (currentstr == "-" && !isPrevWasNumOrVar) {
+            myQueue.push_back(currentstr);
+            continue;
+        }
 
-        switch (currentChar) {
-            case '(':
-                myStack.push(currentChar);
-                continue;
-            case ')':
-                while (myStack.top() != '(') {
-                    myQueue.emplace_back(1, myStack.top());
+        isPrevWasNumOrVar = false;
+
+        if (currentstr.size() == 1) {
+            char currentChar = currentstr[0];
+            switch (currentChar) {
+                case '(':
+                    myStack.push(currentChar);
+                    continue;
+                case ')':
+                    while (myStack.top() != '(') {
+                        myQueue.emplace_back(1, myStack.top());
+                        myStack.pop();
+                    }
                     myStack.pop();
-                }
-                myStack.pop();
-                continue;
-            default:
+                    continue;
+                default:
 
-                // if operator: +,-,*,/ and there is operator with greater priority in the stack.
-                while (!myStack.empty() && (priorityMap.at(myStack.top())) > (priorityMap.at(currentChar))) {
-                    // move the first argument in the stack to the queue.
-                    myQueue.emplace_back(1, myStack.top());
-                    myStack.pop();
-                }
-                // add currentChar to stack
-                myStack.push(currentChar);
-                continue;
+                    // if operator: +,-,*,/ and there is operator with greater priority in the stack.
+                    while (!myStack.empty() && (priorityMap.at(myStack.top())) > (priorityMap.at(currentChar))) {
+                        // move the first argument in the stack to the queue.
+                        myQueue.emplace_back(1, myStack.top());
+                        myStack.pop();
+                    }
+                    // add currentChar to stack
+                    myStack.push(currentChar);
+                    continue;
+            }
+        } else {
+            throw "unrecognie string";
         }
-    }
-
-    if (!num.empty()) { // if the last token that read was number:
-        myQueue.push_back(num);
     }
 
     // add all the stack's argument to the queue.
