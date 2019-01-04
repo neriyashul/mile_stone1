@@ -18,6 +18,4 @@ public:
     }
 };
 
-
-
 #endif //MILE_STONE1_IFCOMMAND_H

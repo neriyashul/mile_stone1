@@ -6,10 +6,12 @@
 #define MILE_STONE1_TCPCLIENT_H
 
 #include "ClientCommand.h"
+#include "Notifier.h"
 
 class TcpClient : public ClientCommand {
-
         public:
+        TcpClient(bool* isNewMassage, std::string* mas, std::mutex* mtx, Notifier& n)
+                     : ClientCommand(isNewMassage, mas, mtx, n) {}
 
         /**
         * The function connect a client to some server.
@@ -18,7 +20,7 @@ class TcpClient : public ClientCommand {
         * @param host - const char*.
         * @return int.
         */
-        virtual int connectClient(const char* ip, const char* host);
+        int connectClient(const char* ip, const char* host) override;
 
         /**
          * The function gets sockdf, ask for string
@@ -26,10 +28,9 @@ class TcpClient : public ClientCommand {
          *
          * @param sockfd -  int.
          */
-        virtual void writeToServer(int);
+        void writeToServer(int) override;
 
-private:
-        void sendMassage(int);
+        void finish() override;
 };
 
 

@@ -2,22 +2,24 @@
 // Created by neriya on 1/2/19.
 //
 
-#ifndef MILE_STONE1_BINDNUMEXP_H
-#define MILE_STONE1_BINDNUMEXP_H
+#ifndef MILE_STONE1_BINDEXP_H
+#define MILE_STONE1_BINDEXP_H
 
 
 #include <string>
 #include "Var.h"
 
-class bindVar : public Var {
-    std::string expressName;
+class bindExp : public Expression {
     double* value = nullptr;
 public:
-    explicit bindVar(double* d) : Var(this)  {
+    explicit bindExp(double* d) {
         value = d;
     }
     double calculate() override {
         return *value;
+    }
+    void setValue(double* val) {
+        value = val;
     }
 };
 

@@ -14,7 +14,7 @@ protected:
 public:
     virtual double calculate()=0;
     BinaryExpression(Expression*first, Expression*second): left(first), right(second){};
-    ~BinaryExpression(){
+    ~BinaryExpression() override {
         delete(left);
         delete (right);
     };

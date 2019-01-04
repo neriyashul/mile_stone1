@@ -1,3 +1,7 @@
+
+#ifndef SHUNTINGYARD_H
+#define SHUNTINGYARD_H
+
 #include <iostream>
 #include <map>
 #include <queue>
@@ -6,6 +10,7 @@
 #include "Expression.h"
 #include "MathExpressions.h"
 #include "Var.h"
+#include "Num.h"
 
 
 using namespace std;
@@ -44,7 +49,7 @@ class ShuntingYard {
      * The function return if the string is binary expression.
      *
      */
-    bool isBinaryOperator(unsigned, string&, string&);
+    bool isBinaryOperator(unsigned, string&);
 
 
     /**
@@ -92,10 +97,8 @@ public:
      * @param strExpress - string&.
      * @return Expression*.
      */
-    Expression* expressionFromString(vector<string>& expression) {
-        if (expression.empty()) {
-            return nullptr;
-        }
-        return postfixCalculator(shuntingYardAlgorithm(expression));
-    }
+    Expression* expressionFromString(vector<string>& expression);
 };
+
+
+#endif // SHUNTINGYARD_H

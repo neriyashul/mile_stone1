@@ -1,7 +1,7 @@
 #include <netinet/in.h>
 #include <strings.h>
 #include <unistd.h>
-#include <string.h>
+#include <cstring>
 #include <thread>
 #include "TcpServer.h"
 
@@ -66,8 +66,18 @@ int TcpServer::connectToClient(int sockfd) {
     return newsockfd;
 }
 
-
-
+/**
+ * The function return if the thread should be done.
+ * The function shoudn't gets
+ * any argument until the thread done.
+ */
+bool isEnd(const string s = "") {
+    static bool a = false;
+    if (s == "end") {
+        a = true;
+    }
+    return a;
+}
 
 
 /**
@@ -89,26 +99,27 @@ void TcpServer::readFromClient(int sockfd, unsigned rate) {
             return;
         }
 
-        this_thread::sleep_for(chrono::milliseconds(rate));
-
-        // lock mutex.
-        lock_guard<mutex> lock(*mtx);
-        updateMap(buffer);
-
         if (n < 0) {
             perror("ERROR reading from socket");
             exit(1);
         }
 
-        //printf("%d Here is the message: %s\n",dummy++, buffer);
+        this_thread::sleep_for(chrono::milliseconds(rate));
 
-
-        /* Write a response to the client */
-        n = static_cast<int>(write(sockfd, "I got your message\n", 18));
-
-        if (n < 0) {
-            perror("ERROR writing to socket");
-            exit(1);
+        // lock mutex.
+        lock_guard<mutex> lock(*mtx);
+        if(isEnd()) {
+            return;
         }
+
+        int a = updateMap(buffer);
     }
+}
+
+/**
+ * the function close the thread.
+ */
+void TcpServer::finish() {
+    // lock mutex.
+    isEnd("end");
 }

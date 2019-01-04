@@ -8,8 +8,8 @@ void ServerCommand::doCommand(std::vector<std::string> &v)  {
     int host = std::stoi(v[0]);
     auto rate = (unsigned) std::stoi(v[1]);
     int sockfd = connectToClient(openServer(host));
+    //clientsSockfd->push_back(sockfd);
     readFromClient(sockfd, rate);
-    clientsSockfd->push_back(sockfd);
 }
 
 
@@ -18,22 +18,24 @@ void ServerCommand::doCommand(std::vector<std::string> &v)  {
      *
      * @param buffer - string&.
      */
-void ServerCommand::updateMap(const std::string &buffer)  {
-    if (valuesOfPathsNums == nullptr) {
-        throw "there is no allocated map";
+int ServerCommand::updateMap(const std::string &buffer)  {
+
+    if (valuesOfPathsNums == nullptr || valuesOfPathsNums->empty()) {
+        return 1;
     }
-    size_t indexStart = 0;
-    size_t indexEnd = 0;
+
     unsigned numInMap = 1;
-    indexEnd = buffer.find(',');
+    std::size_t indexStart = 0;
+    std::size_t indexEnd = 0;
 
     // add to the map the numbers which inserted in the buffer
-    while (indexEnd != std::string::npos) {
-        valuesOfPathsNums->at(numInMap) = std::stod(buffer.substr(indexStart, indexEnd - indexStart));
+    while (!buffer.empty() && indexEnd != std::string::npos) {
+        indexEnd = buffer.find(',', indexStart);
+        double d = std::stod(buffer.substr(indexStart, indexEnd - indexStart));
+        valuesOfPathsNums->at(numInMap) = d;
         ++numInMap;
         indexStart = indexEnd + 1;
-        indexEnd = buffer.find(',');
     }
-    // add the last number to the map
-    valuesOfPathsNums->at(numInMap) = std::stod(buffer.substr(indexStart));
+
+    return 0;
 }

@@ -4,9 +4,15 @@
 
 
 #include "ReadData.h"
+#include "Lexer.h"
+#include "Parser.h"
 
+using  namespace std;
 void ReadData::readFromFile(string fileName) {
-    Interpreter interpreter;
+    //Interpreter interpreter;
+    Lexer lexer;
+    Parser p(&this->threads);
+
     ifstream infile;
 
     // open file
@@ -18,12 +24,16 @@ void ReadData::readFromFile(string fileName) {
     // close file
     infile.close();
 
-    // use lexer and interpreter
-    interpreter.parse(interpreter.lexer(input));
+    vector<string> v = lexer.lexer(input);
+    p.parse(v);
+    p.end();
 }
 
 void ReadData::readFromConsole() {
-    Interpreter interpreter;
+    //Interpreter interpreter;
+    Lexer lexer;
+    Parser p(&threads);
+
     string input;
     string line;
 
@@ -36,7 +46,10 @@ void ReadData::readFromConsole() {
         getline(cin, line);
 
         // read until type 'quit'
-        if (line == "exit") { break; }
+        if (line == "exit") {
+            p.end();
+            break;
+        }
 
         // if in the new line there is new scope add it.
         if (line.find_first_of('{') != string::npos) {
@@ -55,6 +68,8 @@ void ReadData::readFromConsole() {
         }
 
         // use lexer and interpreter
-        interpreter.parse(interpreter.lexer(input));
+        //interpreter.parse(interpreter.lexer(input));
+        vector<string> v = lexer.lexer(input);
+        p.parse(v);
     }
 }

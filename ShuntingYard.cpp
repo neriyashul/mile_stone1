@@ -1,24 +1,22 @@
 
 #include "ShuntingYard.h"
-#include "Num.h"
 
 /**
      * The function return if the string is binary expression.
      * @param strExpression - string&.
      * @return bool.
      */
-bool ShuntingYard::isBinaryOperator(unsigned index, string& str, string& prev) {
+bool ShuntingYard::isBinaryOperator(unsigned sizeOfStack, string& str) {
     {
+        string prev1;
+        string prev2;
         if (str.size() != 1) {
             return false;
         }
 
         switch (str[0]) {
             case '-':
-                if (index < 1 || (!(isDoubleNumber(prev))
-                                        && !isVar(prev)) {
-                    return false;
-                }
+                return (sizeOfStack > 1);
             case '+':
             case '*':
             case '/':
@@ -90,10 +88,10 @@ Expression* ShuntingYard::postfixCalculator(deque<string> strExpressions)  {
         // check if there is minus which not operation.
         bool isPrevMinus = false;
         stack<Expression *> numbers;
-        unsigned index = 0;
+
         for (string& str : strExpressions) {
             // If character is operator, pop two elements from stack, perform operation and push the result back.
-            if (isBinaryOperator(index, str, strExpressions[index - 1])) {
+            if (isBinaryOperator(static_cast<unsigned int>(numbers.size()), str)) {
                 // Pop two operands.
                 Expression *operand2 = numbers.top();
                 numbers.pop();
@@ -108,7 +106,7 @@ Expression* ShuntingYard::postfixCalculator(deque<string> strExpressions)  {
                 numbers.push(result);
             } else if (isDoubleNumber(str)) {
                 if (isPrevMinus) {
-                    numbers.push(new MinusExp(new Num(0), (*variables)[str]));
+                    numbers.push(new MinusExp(new Num(0), new Num(str)));
                     isPrevMinus = false;
                 } else {
                     numbers.push(new Num(str));
@@ -123,8 +121,6 @@ Expression* ShuntingYard::postfixCalculator(deque<string> strExpressions)  {
             } else if (str == "-") {
                 isPrevMinus = true;
             }
-
-            ++index;
         }
 
         // If expression is in correct format, the Stack will finally have one element.
@@ -210,4 +206,11 @@ deque<string> ShuntingYard::shuntingYardAlgorithm(vector<string>& vecStr) {
     }
 
     return myQueue;
+}
+
+Expression* ShuntingYard::expressionFromString(vector<string> &expression)  {
+    if (expression.empty()) {
+        return nullptr;
+    }
+    return postfixCalculator(shuntingYardAlgorithm(expression));
 }

@@ -10,7 +10,7 @@
 #include "Var.h"
 #include "ShuntingYard.h"
 #include "Num.h"
-#include "bindVar.h"
+#include "bindExp.h"
 
 
 class VarDataCommand : public Command {
@@ -33,34 +33,52 @@ public:
         (*variables).insert(pair<string, Var*>(name, v));
     }
 
-    Var* createVar(bool isBind, std::vector<std::string>& expression) {
-        Var *var = new Var;
+    bindExp* createPathBindExpression(string& path) {
+        // if path in maps -> add it's number, else -> create new number.
+        try {
+            return new bindExp(&valuesOfPathsNums->at(numsOfPathsNames->at(path)));
+        } catch (...) {
+            return new bindExp(new double(0));
+        }
+    }
 
-        // if expression is some path.
-        if (*(expression.at(0).begin()) == '"' && *(expression.at(0).end()) == '"') {
+    Var* createVar(bool isBind, std::vector<std::string>& expression) {
+        // lock mtxServer to make no changes in the maps.
+        lock_guard<mutex> lock(*this->mtxServer);
+
+        auto *var = new Var;
+        // if expression's target is some path.
+        if (*(expression.at(0).begin()) == '"' && *(expression.at(0).end() - 1) == '"') {
             // removeApostrophes.
-            expression.erase(expression.begin());
-            expression.erase(expression.end());
+            expression[0].erase(expression[0].begin());
+            expression[0].erase(expression[0].end() - 1);
             if (isBind) {
-                var->setExpression(new bindVar(
-                        &valuesOfPathsNums->at(numsOfPathsNames->at(expression[0]))));
+                var->setExpression(createPathBindExpression(expression[0]));
             } else {
                 var->setExpression(new Num(
                         valuesOfPathsNums->at(numsOfPathsNames->at(expression[0]))));
             }
+            var->setPath(new string(expression[0]));
+
         } else if (isBind) { // if expression is only var's name and is bind.
             // var.expression = var which return from variable.
             var->setExpression(variables->at(expression[0]));
+            var->setPath(variables->at(expression[0])->getPath());
 
-        }else { // if expression is arithmetic including variables.
+        } else { // if expression is arithmetic including variables.
             ShuntingYard sy(variables);
             double d = sy.expressionFromString(expression)->calculate();
             var->setExpression(new Num(d));
+            var->setPath(new string);
         }
 
         return var;
     }
 
+
+    std::unordered_map<std::string,Var*>* getVarMap() const {
+        return variables;
+    }
 
     void doCommand(std::vector<std::string>& v) override {
         // if there is problem with the arguments:
@@ -69,14 +87,19 @@ public:
             throw "wrong numbers of arguments";
         }
 
-        // lock mtxServer to make no changes in the maps.
-        lock_guard<mutex> lock(*this->mtxServer);
+        bool isBind = (v[2] ==  "bind");
+        if (isBind) {
+            // delete bind
+            v.erase(v.begin() + 2);
+        }
 
-        bool isBind = (v[2] == "bind");
+        string name = v[0];
+        // delete name and sign '='.
+        v.erase(v.begin());
+        v.erase(v.begin());
 
-        Var* var = createVar();
-        addVarToMap(v[0],var);
-
+        Var* var = createVar(isBind, v);
+        addVarToMap(name,var);
     }
 };
 

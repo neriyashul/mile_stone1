@@ -19,6 +19,8 @@ public:
         num = val;
     }
 
+    ~Num() override = default;
+
     double calculate() override {
         return num;
     }

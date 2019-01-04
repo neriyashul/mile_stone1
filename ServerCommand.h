@@ -4,16 +4,19 @@
 
 #include <unordered_map>
 #include "Command.h"
+#include "Observer.h"
+#include "Notifier.h"
 
-class ServerCommand : public Command {
+class ServerCommand : public Command, public Observer {
     std::vector<int>* clientsSockfd = nullptr;
     std::unordered_map<std::string, int>* numsOfPathsNames = nullptr;
     std::unordered_map<int, double>* valuesOfPathsNums = nullptr;
 public:
     ServerCommand(std::unordered_map<std::string, int>* mapNames,
-                       std::unordered_map<int, double>* mapValues) {
+                       std::unordered_map<int, double>* mapValues, Notifier& n) {
         this->numsOfPathsNames = mapNames;
         this->valuesOfPathsNums = mapValues;
+        n.addObserver(this);
     }
 
     void doCommand(std::vector<std::string>& v) override;
@@ -24,8 +27,8 @@ public:
      *
      * @param buffer - string&.
      */
-    void updateMap(const std::string& buffer);
-
+    int updateMap(const std::string& buffer);
+/*
     void setFlightName(std::string& name) {
         // if not already in the map ,add it.
         (*numsOfPathsNames)[name] = (int) numsOfPathsNames->size();
@@ -44,7 +47,7 @@ public:
         return valuesOfPathsNums->at(name);
     }
 
-
+*/
 
     std::vector<int>* getClientSockfd() const{
         return clientsSockfd;

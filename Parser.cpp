@@ -1,9 +1,11 @@
 #include "Parser.h"
+#include "PrintCommand.h"
+#include "Equalize.h"
 
 
-    /**
-    * The function initialize the expressionMap.
-    */
+/**
+* The function initialize the expressionMap.
+*/
 void Parser::initMap()  {
     expressionMap.insert(pair<string, int>("openDataServer", OPEN_SERVER));
     expressionMap.insert(pair<string, int>("connect", CONNECT));
@@ -19,19 +21,23 @@ void Parser::initMap()  {
 
 
 Command* Parser::createCommand(int expressNumInMap)  {
+
     switch (expressNumInMap) {
         case OPEN_SERVER:
-            return new TcpServer(&numsOfPathsNames, &valuesOfPathsNums, &mtxServer);
+            return new TcpServer(&numsOfPathsNames,
+                    &valuesOfPathsNums, &mtxServer, notifier);
         case CONNECT:
-            return new TcpClient();
-            case VAR:
-                return &dataVar;
-            /*case PRINT:
-                return new PrintCommand();
-            case SLEEP:
-                return new SleepCommand();
+            return new TcpClient(&this->isNewMassage,
+                    &this->massage, &mtxClient, notifier);
+        case VAR:
+            return &dataVar;
+        case PRINT:
+            return new PrintCommand(&shuntYard, &variable);
+        case SLEEP:
+            return new SleepCommand(&shuntYard);
             case EQUAL:
-                return new EqualCommand();*/
+                return new Equalize(&variable, shuntYard,
+                         &this->isNewMassage, &this->massage, &mtxClient);
         case IF:
             return new IfCommand();
         case WHILE:
@@ -41,24 +47,28 @@ Command* Parser::createCommand(int expressNumInMap)  {
         case EXIT:
             return new Exit();
         default:
-            return nullptr;
+            throw "problem with the input value";
     }
 }
 
 
 
 void Parser::callDoCommand(bool isCreateThread, Command *c,
-              vector<thread> &threads, vector<string> &arg)  {
+              vector<thread> *threads, vector<string> &arg)  {
     if (isCreateThread) {
         // create thread of command->doCommand(arguments).
-        threads.push_back(thread(&Command::doCommand,
+        threads->push_back(thread(&Command::doCommand,
                               c, ref(arg)));
         static bool isFirstTime = true;
         if (isFirstTime) {
             // wait until char is enter
+            cout << "press some key to continue\n";
             Enterc e;
             e.doCommand(arg);
             isFirstTime = false;
+        } else {
+            // give a bit of time to the server or the client for connect.
+            this_thread::sleep_for(chrono::milliseconds(200));
         }
     } else {
         c->doCommand(arg);
@@ -87,7 +97,6 @@ void Parser::parse(vector<string> &vectorStr)  {
     int numOfOpenerScope = 0;
     Command *command = nullptr;
     vector<string> arguments;
-    vector<thread> threads;
 
     for (string &str : vectorStr) {
         // if new scope:
@@ -104,6 +113,7 @@ void Parser::parse(vector<string> &vectorStr)  {
               if (command != nullptr) {
                   callDoCommand(isCreateThread, command, threads, arguments);
                   isCreateThread = false;
+                  arguments.clear();
               }
         } else if (isNewLine) { // str = first string in a line.
 
@@ -115,15 +125,22 @@ void Parser::parse(vector<string> &vectorStr)  {
                 isInsideScope = true;
             }
 
-            // create new command according to the command in the line.
-            command = createCommand(expressionMap.at(str));
-            // if the first string in the
-            if (command == nullptr) {
-                // continue; **********************************************
+            if (expressionMap.count(str) > 0) {
+                command = createCommand(expressionMap[str]);
+            } else { // if the command isn't in the first string.
+                arguments.push_back(str);
+                continue;
             }
             isNewLine = false;
         } else { // the argument in the middle of the line.
             arguments.push_back(str);
         }
+    }
+}
+
+void Parser::end() {
+    notifier.notifyAll();
+    for (thread& t: *threads) {
+        t.join();
     }
 }

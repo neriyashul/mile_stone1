@@ -5,6 +5,7 @@
 
 #include <mutex>
 #include "ServerCommand.h"
+#include "Notifier.h"
 
 class TcpServer : public ServerCommand {
     std::mutex* mtx;
@@ -12,7 +13,8 @@ public:
     // constructor.
     TcpServer(std::unordered_map<std::string,int>* mapNames
                  ,std::unordered_map<int, double>* mapValues,
-                 std::mutex* mtxServer) : ServerCommand(mapNames, mapValues){
+                 std::mutex* mtxServer, Notifier& n)
+                       : ServerCommand(mapNames, mapValues, n){
         mtx = mtxServer;
     }
 
@@ -35,6 +37,8 @@ public:
      * @param sockfd - int.
      */
     void readFromClient(int sockfd, unsigned rate) override;
+
+    void finish() override;
 };
 
 

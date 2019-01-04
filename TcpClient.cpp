@@ -2,6 +2,7 @@
 // Created by neriya on 12/23/18.
 //
 
+#include <mutex>
 #include "TcpClient.h"
 using  namespace std;
 
@@ -54,7 +55,7 @@ int TcpClient::connectClient(const char *ip, const char *host) {
      *
      * @param sockfd -  int.
      */
-void TcpClient::writeToServer(int sockfd)  {
+void TcpClient::writeToServer(int sockfd) {
 
     /* ask for message from the user, this message
     *  will be read by server
@@ -62,41 +63,34 @@ void TcpClient::writeToServer(int sockfd)  {
     if (sockfd < 0) {
         throw "there is no connection to server";
     }
-    char buffer[256];
-    while (strcmp(buffer, "exit") != 0) {
-    }
 
-        /*
-        /* Now read server response */
-        /*bzero(buffer, 256);
-        n = read(sockfd, buffer, 255);
+    while (true) {
+        if (*isNewMassage && clientMtx->try_lock()) {
 
-        if (n < 0) {
-            perror("ERROR reading from socket");
-            exit(1);
-        }
-        printf("%s\n", buffer);
-         */
-    }
-
-    void TcpClient::sendMassage(int sockfd, char* msg) {
-        while (true) {
-            if (isGotMassage) {
-                /* printf("Please enter the message: ");
-
-                 bzero(buffer, 256);
-                 fgets(buffer, 255, stdin);
-                 */
-               strcat(msg, "\r\n");
-
-                /* Send message to the server */
-                int n = (int) write(sockfd, msg, strlen(msg));
-
-                if (n < 0) {
-                    perror("ERROR writing to socket");
-                    exit(1);
-                }
+            if (*this->massage == "exit") {
+                clientMtx->unlock();
+                return;
             }
+            *this->massage += "\r\n";
+
+            /* Send message to the server */
+            int n = (int) write(sockfd, this->massage->c_str(), massage->size());
+
+            if (n < 0) {
+                clientMtx->unlock();
+                perror("ERROR writing to socket");
+                exit(1);
+            }
+            clientMtx->unlock();
         }
     }
+}
+/**
+ * finish this thread.
+ */
+void TcpClient::finish() {
+    // lock mutex.
+    lock_guard<mutex> lock(*this->clientMtx);
+    *this->isNewMassage = true;
+    *this->massage = "exit";
 }

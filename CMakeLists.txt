@@ -10,23 +10,17 @@ include_directories(cmake-build-debug)
 add_executable(mile_stone1
         main.cpp
         BinaryExpression.h
-
-        CommandFactory.h
-        CommandFactory.cpp
         Command.h
         CommandExpression.h
         ConditionParserCommand.cpp
         ConditionParserCommand.h
         Expression.h
-        ExpsCollection.h
-        ExpsCollection.cpp
         Interpreter.cpp
         Interpreter.h
 
         Lexer.h
         Lexer.cpp
         MathExpressions.h
-        MathExpressions.cpp
         Num.h
         ShuntingYard.h
         ShuntingYard.cpp
@@ -46,7 +40,21 @@ add_executable(mile_stone1
         ReadData.h
         Enterc.h
         IfCommand.h
-        Exit.h Parser.cpp ServerCommand.cpp Var.h Equalize.cpp Equalize.h bindVar.h VarDataCommand.cpp VarDataCommand.h Print.h)
+        Exit.h Parser.cpp
+        ServerCommand.cpp
+        Var.h
+        Equalize.cpp
+        Equalize.h
+        bindExp.h
+        VarDataCommand.cpp
+        VarDataCommand.h
+        PrintCommand.h
+        SleepCommand.cpp
+        PrintCommand.cpp
+        Var.cpp
+        Observer.h
+        Notifier.h
+        Notifier.cpp)
 
 
 #ClientServerCommands.h

@@ -20,9 +20,10 @@
 #include "IfCommand.h"
 #include "WhileCommand.h"
 #include "VarDataCommand.h"
+#include "Notifier.h"
 
 #include <unordered_map>
-#include <string.h>
+#include <cstring>
 #include <thread>
 
 enum {
@@ -33,7 +34,6 @@ enum {
 
 
 class Parser {
-    unordered_map<string, int> expressionMap;
     /*  create map that every path has the next num after the previous,
         accordingly tp the order in the xml file. */
     unordered_map<string, int> numsOfPathsNames = {
@@ -66,14 +66,32 @@ class Parser {
     unordered_map<int, double> valuesOfPathsNums = {{1,0}, {2,0},{3,0}, {4,0},{5,0}, {6,0},{7,0}, {8,0},
                                               {9,0}, {10,0},{11,0},{12,0},{13,0},{14,0},{15,0},
                                               {16,0},{17,0},{18,0},{19,0}, {20,0},{21,0},{22,0},{23,0}};
-   VarDataCommand dataVar;
-   mutex mtxServer;
+    unordered_map<string, int> expressionMap;
+
+    std::unordered_map<std::string,Var*> variable;
+    VarDataCommand dataVar;
+    mutex mtxServer;
+    mutex mtxClient;
+    ShuntingYard shuntYard;
+    bool isNewMassage = false;
+    string massage;
+    vector<thread>* threads = nullptr;
+    Notifier notifier;
 
 public:
 
-    Parser() : dataVar(&numsOfPathsNames,
-                &valuesOfPathsNums, &mtxServer) {
+    explicit Parser(vector<thread>* threadsVec) : dataVar(&numsOfPathsNames,
+                &valuesOfPathsNums, &variable, &mtxServer), shuntYard(&variable) {
+        threads = threadsVec;
         initMap();
+    }
+
+    ~Parser(){
+        for (std::pair<string, Var*> p : variable) {
+            if (p.second != nullptr) {
+                delete(p.second);
+            }
+        }
     }
 
     /**
@@ -107,7 +125,7 @@ public:
 
 
     void callDoCommand(bool isCreateThread, Command* c,
-            vector<thread>& threads, vector<string>& arg);
+            vector<thread>* threads, vector<string>& arg);
 
     bool isScopeEnd(const string& str, int& numOfOpenerScope);
 
@@ -118,82 +136,11 @@ public:
      * @param vectorStr - vector<string>&.
      */
     void parse(vector<string>& vectorStr);
+
+    /**
+     * the function call no all listener to close the threads.
+     */
+    void end();
 };
-
-
-
-/*
-class Parser {
-public:
-    void parse(vector<string> &code, ExpsCollection* expressions,
-               CommandFactory* factory, map<string,string> &codeMap);
-};
-void Parser::parse(vector<string> &code, ExpsCollection *expressions, CommandFactory *factory,
-                   map<string, string> &codeMap) {
-    int index = 0;
-    if(!code.empty() && code[code.size()-1]!=";") {
-        code.push_back(";");
-    }
-    vector<string> commandCode;
-    while (index < code.size()) {
-        // skip empty string
-        if (code[index].empty() && index < code.size() - 1) {
-            ++index;
-        }
-        if (codeMap.count(code[index])) {
-            if (codeMap[code[index]] == "command") {
-                commandCode.clear();
-                commandCode.push_back(code[index]);
-                ++index;
-                while (index < code.size() && code[index] != ";") {
-                    commandCode.push_back(code[index]);
-                    ++index;
-                    // skip empty string
-                    if (code[index].empty() && index < code.size() - 1) {
-                        ++index;
-                    }
-                }
-                index++;
-                expressions->addExpression(new CommandExpression(factory->createCommand(commandCode)));
-                // case command with block
-            } else {
-                commandCode.clear();
-                commandCode.push_back(code[index]);
-                index++;
-                while (index < code.size() && code[index] != "}") {
-                    commandCode.push_back(code[index]);
-                    index++;
-                    // skip empty string
-                    if (code[index] == "" && index < code.size() - 1) {
-                        ++index;
-                    }
-                }
-                index += 2;
-                expressions->addExpression(new CommandExpression(factory->createCommand(commandCode)));
-            }
-            // case command word is the second word ("=")
-        } else if (code.size() > index + 1 && codeMap.count(code[index + 1])) {
-            commandCode.clear();
-            commandCode.push_back(code[index]);
-            index++;
-            while (code[index] != ";") {
-                commandCode.push_back(code[index]);
-                index++;
-                // skip empty string
-                if (code[index].empty() && index < code.size() - 1) {
-                    ++index;
-                }
-            }
-            expressions->addExpression(new CommandExpression(factory->createCommand(commandCode)));
-            index++;
-        } else {
-            index++;
-        }
-    }
-}
- */
-
-
-
 
 #endif //MILE_STONE1_THEPARSER_H

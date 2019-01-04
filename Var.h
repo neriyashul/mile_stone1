@@ -14,42 +14,70 @@
 
 class Var : public Expression {
     Expression* exp = nullptr;
+    std::string* path = nullptr;
 public:
+    Var() = default;
+
     explicit Var(Expression* e) {
         this->exp = e;
     }
 
-    //Var() = default;
+    Var(Expression*e, std::string* newPath) {
+        exp = e;
+        path = newPath;
+    }
 
-    virtual double calculate() {
+    ~Var() override {
+        if (exp != nullptr) {
+            delete (exp);
+        }
+        if (path != nullptr) {
+            delete (path);
+        }
+    }
+
+
+
+    double calculate() override {
         if (exp == nullptr) {
             throw "var is empty";
         }
         return exp->calculate();
     }
 
+    void setPath(std::string* newPath) {
+        if (path != nullptr) {
+            delete(path);
+        }
+        path = newPath;
+    }
+
+    std::string* getPath() const {
+        return path;
+    }
 
     Expression* getExpression() const {
         return this->exp;
     }
 
     void setExpression(Expression* e) {
+        if (this->exp != nullptr) {
+            delete (this->exp);
+        }
         this->exp = e;
     }
 };
-std::ostream& operator << (std::ostream& os, const Var& v) {
-    os << v.getExpression()->calculate();
-    return os;
-}
-
 
 /*****
  * override operator << for printing.
  *
  * @param os - ostream&.
- * @param infNum -const InfInt&.
+ * @param v - const Var&.
  */
-std::ostream& operator<<(std::ostream& os, Var& var);
+inline std::ostream& operator << (std::ostream& os, Var& v) {
+    os << std::to_string(v.getExpression()->calculate());
+    return os;
+}
 
 
 #endif //MILE_STONE1_VAR_H

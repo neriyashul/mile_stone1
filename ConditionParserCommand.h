@@ -3,10 +3,8 @@
 
 #include "Command.h"
 #include <vector>
-#include <string.h>
+#include <cstring>
 #include "Expression.h"
-#include "ShuntingYard.h"
-//#include "Parser.h"
 
 #define STR_END_OF_CONDITION "{"
 #define STR_START_OF_SCOPE "{"

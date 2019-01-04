@@ -4,9 +4,9 @@
 
 #ifndef UNTITLED1_INTERPRETER_H
 #define UNTITLED1_INTERPRETER_H
+/*
 
-
-#include <string.h>
+#include <cstring>
 #include <list>
 #include <map>
 #include <iostream>
@@ -36,6 +36,6 @@ public:
 
     void parse(vector<string> input);
 };
-
+*/
 
 #endif //UNTITLED1_INTERPRETER_H

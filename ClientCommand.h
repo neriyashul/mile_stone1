@@ -1,22 +1,34 @@
 #ifndef MILE_STONE1_CLIENTCOMMAND_H
 #define MILE_STONE1_CLIENTCOMMAND_H
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 
 #include <netdb.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <netinet/in.h>
 
-#include <string.h>
+#include <cstring>
+#include <mutex>
 #include "Command.h"
+#include "Observer.h"
+#include "Notifier.h"
 
-class ClientCommand : public Command {
+class ClientCommand : public Command, public Observer {
 protected:
-    bool isGotMassage = false;
+    bool* isNewMassage;
+    std::string* massage;
     int clientSockfd = -1;
+    std::mutex* clientMtx;
 public:
+    ClientCommand(bool* isMassage, std::string* mas, std::mutex* mtx, Notifier& n) {
+        isNewMassage = isMassage;
+        massage = mas;
+        clientMtx = mtx;
+        n.addObserver(this);
+    }
+
     /**
      * The function open client.
      *
@@ -27,7 +39,8 @@ public:
             throw "wrong numbers of arguments";
         }
         // use [] because there is 2 arguments.
-        clientSockfd = connectClient(v[0].c_str(), v[1].c_str());
+        this->clientSockfd = connectClient(v[0].c_str(), v[1].c_str());
+        writeToServer(clientSockfd);
     }
 
     /**
@@ -38,6 +51,7 @@ public:
      * @return int.
      */
     virtual int connectClient(const char* ip, const char* host) = 0;
+
 
     /**
      * The function return the sockfd.

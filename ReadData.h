@@ -9,9 +9,10 @@
 #include <list>
 #include <vector>
 #include <iostream>
-#include <string.h>
+#include <cstring>
 #include <fstream>
 #include <sstream>
+#include <thread>
 
 #include "Interpreter.h"
 
@@ -20,9 +21,9 @@
 
 
 class ReadData {
-
+std::vector<std::thread> threads;
 public:
-    void readFromFile(string fileName);
+    void readFromFile(std::string fileName);
 
     void readFromConsole();
 };

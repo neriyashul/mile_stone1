@@ -2,9 +2,7 @@
 // Created by yedaya on 12/25/18.
 //
 
-#include "Interpreter.h"
-
-
+/*
 
 vector<string> Interpreter::lexer(string input) {
     Lexer lexer;
@@ -46,4 +44,4 @@ Interpreter::~Interpreter() {
     // free all VarDataCommand
     for (auto &it : this->symTbl)
         delete it.second;
-}
+}*/
