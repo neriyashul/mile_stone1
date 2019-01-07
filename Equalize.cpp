@@ -14,7 +14,7 @@ Equalize::Equalize(unordered_map<string, Var *> *vars,
 
 
 void Equalize::doCommand(vector<string> &args)  {
-    if (args.size() < 2) {
+    if (args.size() < 2 && !this->name) {
         throw "wrong numbers of arguments";
     }
     // lock mutex.

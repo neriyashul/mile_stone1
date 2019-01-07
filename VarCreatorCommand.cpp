@@ -25,11 +25,11 @@ Var* VarDataCommand::createPathVar(bool isBind, string &path)  {
     if (isBind) {
         // if path in the maps -> create bindVar, else -> create new Var.
         try {
-            var->setExpression(new BindVar(
-                    valuesOfPaths->at(
-                            numsOfPathsNames->at(path))));
+            int numInMap = numsOfPathsNames->at(path);
+            double* valuePath = valuesOfPaths->at(numInMap);
+            var->setExpression(new BindVar(valuePath));
         } catch(...) { // if there is no such path:
-            var->setExpression(new UntieVar(double(0)));
+            var->setExpression(new UntieVar(0));
         }
     } else {
         // find the path in the map:
