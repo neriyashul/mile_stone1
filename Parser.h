@@ -103,7 +103,7 @@ public:
         return  (str == "if" || str == "while");
     }
 
-    std::vector<std::string> getOneLine(int index, std::vector<std::string> &vectorStr);
+    std::vector<std::string> getOneLine(unsigned long index, std::vector<std::string> &vectorStr);
 
     /*void callDoCommand(bool isCreateThread, Command* c,
             vector<thread>* threads, vector<string>& arg);

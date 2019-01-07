@@ -59,10 +59,10 @@ bool ConditionParserCommand::isConditionSatisfy() {
 }
 
 int ConditionParserCommand::getOperatorLocation(vector<string>& v) {
-    for (int i = 0; i < v.size(); ++i) {
+    for (unsigned long i = 0; i < v.size(); ++i) {
         if(this->expressionFactory
                 ->isConditionOperator(v[i])) {
-            return i;
+            return (int)i;
         }
     }
     return -1;

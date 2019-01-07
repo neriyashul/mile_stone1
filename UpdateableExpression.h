@@ -1,6 +1,7 @@
 #ifndef MILE_STONE1_UPDATEABLEEXPRESSION_H
 #define MILE_STONE1_UPDATEABLEEXPRESSION_H
 
+#include "Expression.h"
 
 class UpdateableExpression : public Expression {
 public:

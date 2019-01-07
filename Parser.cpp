@@ -99,9 +99,9 @@ bool Parser::isOneScopeEnd(const vector<string>& line)  {
 
 
 
-vector<string> Parser::getOneLine(int index, vector<string> &vectorStr) {
+vector<string> Parser::getOneLine(unsigned long index, vector<string> &vectorStr) {
     vector<string> line;
-    for (int i = index; i < vectorStr.size(); ++i) {
+    for (unsigned long i = index; i < vectorStr.size(); ++i) {
         if (vectorStr[i] == STR_END_OF_LINE) {
             return line;
         } else {
@@ -135,7 +135,7 @@ Command* Parser::parseOneLine(vector<string>* arguments) {
 }
 
 vector<Expression*> Parser::parse(vector<string> &vectorStr)  {
-    static int vecIndex = 0;
+    static unsigned long vecIndex = 0;
     vector<string> line;
     vector<Expression*> expressions;
 

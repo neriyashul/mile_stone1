@@ -13,7 +13,7 @@ vector<string> Lexer::lexer(string input) {
     string word;
     vector<string> words;
 
-    int i = 0;
+    unsigned long i = 0;
     // pass blanks at the beginning
     while (i < input.size() && 
     (input[i] == ' ' || input[i] == '\t' || input[i] == '\n')) {
@@ -103,7 +103,7 @@ vector<string> Lexer::lexer(string input) {
         words.push_back(word);
     }
     // remove double ";"
-    for (int j = 1; j < words.size(); ++j) {
+    for (unsigned long j = 1; j < words.size(); ++j) {
         if (words[j - 1] == ";" && words[j] == ";") {
             words[j - 1] = "";
         }

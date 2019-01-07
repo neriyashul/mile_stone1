@@ -14,7 +14,7 @@ using namespace std;
      */
 int TcpServer::openServer(int host) {
     int sockfd, portno;
-    struct sockaddr_in serv_addr, cli_addr;
+    struct sockaddr_in serv_addr;
 
     /* First call to socket() function */
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -90,7 +90,6 @@ void TcpServer::readFromClient(int sockfd, unsigned rate) {
 
     /* start communicating */
     int n;
-    int dummy = 1;
     char buffer [256] ;
     bzero(buffer,256);
     while (true) {
