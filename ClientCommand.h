@@ -11,37 +11,43 @@
 
 #include <cstring>
 #include <mutex>
+#include <thread>
 #include "Command.h"
 #include "Observer.h"
 #include "Notifier.h"
+#include "ExpressionFactory.h"
 
 class ClientCommand : public Command, public Observer {
 protected:
+    int clientSockfd = -1;
     bool* isNewMassage;
     std::string* massage;
-    int clientSockfd = -1;
     std::mutex* clientMtx;
+    std::vector<std::thread>* threads;
+    ExpressionFactory* expressFactor;
+    Expression* host;
+    std::string ip;
 public:
-    ClientCommand(bool* isMassage, std::string* mas, std::mutex* mtx, Notifier& n) {
-        isNewMassage = isMassage;
-        massage = mas;
-        clientMtx = mtx;
-        n.addObserver(this);
-    }
+    ClientCommand(bool* isMassage, std::string* mas,
+            std::mutex* mtx, Notifier* n,
+            std::vector<std::thread>* allThreads,
+            ExpressionFactory* ef);
 
+    ~ClientCommand() override {
+        delete host;
+    }
     /**
      * The function open client.
      *
      * @param v -  vector<string>&.
      */
-    void doCommand(std::vector<std::string>& v) override {
-        if (v.size() != 2) {
-            throw "wrong numbers of arguments";
-        }
-        // use [] because there is 2 arguments.
-        this->clientSockfd = connectClient(v[0].c_str(), v[1].c_str());
-        writeToServer(clientSockfd);
-    }
+    void doCommand(std::vector<std::string>& v) override;
+
+    /**
+     * the function open server and gets massagess.
+     * @param v  - std::vector<std::string>.
+     */
+    void run();
 
     /**
      * The function connect a client to some server.
@@ -50,20 +56,8 @@ public:
      * @param host - const char*.
      * @return int.
      */
-    virtual int connectClient(const char* ip, const char* host) = 0;
+    virtual int connectClient() = 0;
 
-
-    /**
-     * The function return the sockfd.
-     *
-     * @param ip -  const char*.
-     * @param host - const char*.
-     * @return int.
-     */
-    int getSockfd() const {
-
-        return clientSockfd;
-    }
 
     /**
      * The function gets sockdf, ask for string
@@ -72,6 +66,19 @@ public:
      * @param sockfd -  int.
      */
     virtual void writeToServer(int sockfd) = 0;
+
+
+    /**
+    * The function return the sockfd.
+    *
+    * @param ip -  const char*.
+    * @param host - const char*.
+    * @return int.
+    */
+    int getSockfd() const {
+
+        return clientSockfd;
+    }
 };
 
 

@@ -3,21 +3,39 @@
 
 
 #include <unordered_map>
+#include <thread>
+#include <mutex>
 #include "Command.h"
 #include "Observer.h"
 #include "Notifier.h"
+#include "ExpressionFactory.h"
 
 class ServerCommand : public Command, public Observer {
     std::vector<int>* clientsSockfd = nullptr;
     std::unordered_map<std::string, int>* numsOfPathsNames = nullptr;
-    std::unordered_map<int, double>* valuesOfPathsNums = nullptr;
+    std::unordered_map<int, double*>* valuesOfPaths = nullptr;
+    std::vector<std::thread>* threads = nullptr;
+protected:
+    std::mutex* mtx = nullptr;
+    ExpressionFactory* expressFactor = nullptr;
+    Expression* hostExpress = nullptr;
+    Expression *rateExpress = nullptr;
 public:
     ServerCommand(std::unordered_map<std::string, int>* mapNames,
-                       std::unordered_map<int, double>* mapValues, Notifier& n) {
-        this->numsOfPathsNames = mapNames;
-        this->valuesOfPathsNums = mapValues;
-        n.addObserver(this);
-    }
+                  std::unordered_map<int, double*>* mapValues,
+                  Notifier*,
+                  std::vector<std::thread>*,
+                  ExpressionFactory*,
+                  std::mutex*);
+
+
+    virtual ~ServerCommand() = 0;
+
+    /**
+     * the function open data server and send massagess.
+     * @param v  - std::vector<std::string>.
+     */
+    void run();
 
     void doCommand(std::vector<std::string>& v) override;
 
@@ -28,26 +46,7 @@ public:
      * @param buffer - string&.
      */
     int updateMap(const std::string& buffer);
-/*
-    void setFlightName(std::string& name) {
-        // if not already in the map ,add it.
-        (*numsOfPathsNames)[name] = (int) numsOfPathsNames->size();
-    }
 
-    int getFlightName(std::string& name) const {
-        return numsOfPathsNames->at(name);
-    }
-
-    void setFlightValue(int name, double value) {
-        // if not already in the map ,add it.
-        (*valuesOfPathsNums)[name] = value;
-    }
-
-    double getFlightValue(int name) const {
-        return valuesOfPathsNums->at(name);
-    }
-
-*/
 
     std::vector<int>* getClientSockfd() const{
         return clientsSockfd;

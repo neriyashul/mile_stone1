@@ -8,63 +8,57 @@
 
 #include <string>
 #include <unordered_map>
-#include "Threads.h"
+#include <ostream>
+#include <iostream>
 #include "Command.h"
 #include "Expression.h"
+#include "UntieVar.h"
 
 class Var : public Expression {
-    Expression* exp = nullptr;
-    std::string* path = nullptr;
+    UpdateableExpression* exp = nullptr;
+    std::string path;
 public:
+    /**
+     * constructors:
+     */
     Var() = default;
 
-    explicit Var(Expression* e) {
+    explicit Var(UpdateableExpression* e) {
         this->exp = e;
     }
 
-    Var(Expression*e, std::string* newPath) {
+    Var(UpdateableExpression*e, std::string& newPath) {
         exp = e;
         path = newPath;
     }
 
     ~Var() override {
-        if (exp != nullptr) {
-            delete (exp);
-        }
-        if (path != nullptr) {
-            delete (path);
-        }
+        delete (exp);
+    }
+
+    /**
+     * the function update the value in exp.
+     * @param d double.
+     */
+    void update(double d) {
+        this->exp->update(d);
     }
 
 
+    double calculate() override;
 
-    double calculate() override {
-        if (exp == nullptr) {
-            throw "var is empty";
-        }
-        return exp->calculate();
-    }
+    void setExpression(UpdateableExpression* e);
 
-    void setPath(std::string* newPath) {
-        if (path != nullptr) {
-            delete(path);
-        }
-        path = newPath;
-    }
+    void setExpression(Expression* e);
 
-    std::string* getPath() const {
+    void setPath(std::string& newPath);
+
+    std::string& getPath() {
         return path;
     }
 
-    Expression* getExpression() const {
+    UpdateableExpression* getExpression() const {
         return this->exp;
-    }
-
-    void setExpression(Expression* e) {
-        if (this->exp != nullptr) {
-            delete (this->exp);
-        }
-        this->exp = e;
     }
 };
 

@@ -1,3 +1,5 @@
+#include <utility>
+
 #ifndef MILE_STONE1_CONDITIONPARSERCOMMAND_H
 #define MILE_STONE1_CONDITIONPARSERCOMMAND_H
 
@@ -5,6 +7,8 @@
 #include <vector>
 #include <cstring>
 #include "Expression.h"
+#include "ExpressionFactory.h"
+#include "ShuntingYard.h"
 
 #define STR_END_OF_CONDITION "{"
 #define STR_START_OF_SCOPE "{"
@@ -13,9 +17,33 @@
 
 
 class ConditionParserCommand : public Command {
-
-    vector<string> inScope; // everything that after the condition.
+    ExpressionFactory* expressionFactory;
+protected:
+    std::vector<Expression*> arguments;
+    Expression* left = nullptr;
+    Expression* right = nullptr;
+    std::string conditionOperator;
 public:
+    explicit ConditionParserCommand(ExpressionFactory* expressFactor) {
+        expressionFactory = expressFactor;
+    }
+
+    ~ConditionParserCommand() override {
+        delete left;
+        delete right;
+
+        for (Expression* e: arguments) {
+            delete(e);
+        }
+    }
+
+  /**
+   * add argument to the vector.
+   * @param Expression*.
+   */
+    void setExpressionArgs(std::vector<Expression*> e) {
+        this->arguments = std::move(e);
+    }
 
     /**
  * The function gets 2 Expressions and condition.
@@ -36,48 +64,20 @@ public:
  * @param exp2 - Expression.
  * @return bool.
  */
- bool isConditionSatisfy(const string& condition, Expression* exp1, Expression* exp2);
-
- /**
-  * the function parse all the things inside the condition.
-  */
- void callToParser() {
-    // Parser p;
-    // p.parse(inScope);
- }
-
-
- /**
-  * the function combine all the string into one.
-  * @param strs
-  * @return
-  */
-    string combineStrings(const vector<string>& strs);
-
- /**
-  * The function gets a vector with string and return vector with:
-  * 1) left size of the operator in the condition.
-  * 2) operator
-  * 3) right size of the operator in the condition.
-  * @param v - const vector<string>& v.
-  * @return vector<string>&.
-  */
- vector<vector<string>> createConditionVec(const vector<string>& v);
-
-
-
- Expression* expFromShuntingYard(string str) {
-     ShuntingYard s;
-     return s.expressionFromString(str);
-    };
-
+ bool isConditionSatisfy();
 
 
  /**
   * @overrite doCommand.
   */
- virtual void doCommand(vector<string>&) = 0;
+ virtual void doCommand(std::vector<std::string>&) = 0;
 
+    /**
+     * the function return the location of the operator in the vector.
+     * @param v - vector<string>&.
+     * @return int.
+     */
+    int getOperatorLocation(std::vector<std::string>& );
 
     /**
         * the function handle to condition and return vector of string with:
@@ -87,13 +87,7 @@ public:
         * @param v - vector<string>.
         * @return vector<string>.
         */
-    vector<string> conditionHandle(const vector<string>& v);
-
-    /**
-    * The function insert string to inSegmaent.
-    * @param str.
-    */
- void addToScope(const vector<string>&);
+    void conditionCreator(std::vector<std::string>& v);
 
 };
 

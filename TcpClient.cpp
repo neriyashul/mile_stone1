@@ -13,13 +13,13 @@ using  namespace std;
      * @param host - const char*.
      * @return int.
      */
-int TcpClient::connectClient(const char *ip, const char *host) {
-
-    int sockfd, portno;
+int TcpClient::connectClient() {
+    int sockfd, portno, n;
     struct sockaddr_in serv_addr;
     struct hostent *server;
 
-    portno = atoi(host);
+
+    portno = static_cast<int>(host->calculate());
 
     /* Create a socket point */
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -29,7 +29,7 @@ int TcpClient::connectClient(const char *ip, const char *host) {
         exit(1);
     }
 
-    server = gethostbyname(ip);
+    server = gethostbyname(ip.c_str());
 
     if (server == NULL) {
         fprintf(stderr,"ERROR, no such host\n");
@@ -64,6 +64,7 @@ void TcpClient::writeToServer(int sockfd) {
         throw "there is no connection to server";
     }
 
+    char buffer[256];
     while (true) {
         if (*isNewMassage && clientMtx->try_lock()) {
 
@@ -71,16 +72,21 @@ void TcpClient::writeToServer(int sockfd) {
                 clientMtx->unlock();
                 return;
             }
-            *this->massage += "\r\n";
+
+            bzero(buffer,256);
+            copy(this->massage->begin(), this->massage->end(), buffer);
+            std::strcat(buffer, "\r\n");
+
 
             /* Send message to the server */
-            int n = (int) write(sockfd, this->massage->c_str(), massage->size());
+            int n = (int) write(sockfd, buffer, strlen(buffer));
 
             if (n < 0) {
                 clientMtx->unlock();
                 perror("ERROR writing to socket");
                 exit(1);
             }
+            *isNewMassage = false;
             clientMtx->unlock();
         }
     }

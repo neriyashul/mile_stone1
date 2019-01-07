@@ -9,21 +9,25 @@
 #include "Command.h"
 
 class CommandExpression : public Expression {
-    Command* command;
+    Command* command = nullptr;
     std::vector<std::string> arguments;
 public:
-    CommandExpression (Command* c) {
+    CommandExpression (Command* c, std::vector<std::string>& args) {
         command = c;
+        arguments = args;
     }
 
-    ~CommandExpression() {
+    virtual ~CommandExpression() {
         delete command;
     }
 
-    virtual double calculate() {
+    double calculate() override {
         command->doCommand(arguments);
         return 0;
     }
 
+    Command* getCommand() const {
+        return command;
+    }
 };
 #endif //MILE_STONE1_COMMANDEXPRESSION_H

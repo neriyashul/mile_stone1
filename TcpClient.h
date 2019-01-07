@@ -10,8 +10,11 @@
 
 class TcpClient : public ClientCommand {
         public:
-        TcpClient(bool* isNewMassage, std::string* mas, std::mutex* mtx, Notifier& n)
-                     : ClientCommand(isNewMassage, mas, mtx, n) {}
+        TcpClient(bool* isNewMassage, std::string* mas,
+                std::mutex* mtx, Notifier* n,
+                std::vector<std::thread>* threads,
+                ExpressionFactory* ef)
+                : ClientCommand(isNewMassage, mas, mtx, n, threads, ef) {}
 
         /**
         * The function connect a client to some server.
@@ -20,7 +23,7 @@ class TcpClient : public ClientCommand {
         * @param host - const char*.
         * @return int.
         */
-        int connectClient(const char* ip, const char* host) override;
+        int connectClient() override;
 
         /**
          * The function gets sockdf, ask for string

@@ -111,8 +111,7 @@ void TcpServer::readFromClient(int sockfd, unsigned rate) {
         if(isEnd()) {
             return;
         }
-
-        int a = updateMap(buffer);
+        updateMap(buffer);
     }
 }
 
@@ -121,5 +120,6 @@ void TcpServer::readFromClient(int sockfd, unsigned rate) {
  */
 void TcpServer::finish() {
     // lock mutex.
+    lock_guard<mutex> lock(*mtx);
     isEnd("end");
 }

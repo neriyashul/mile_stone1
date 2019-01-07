@@ -9,7 +9,7 @@
 // interface
 class Command {
 public:
-
+    virtual ~Command() = default;
     virtual void doCommand(std::vector<std::string>& v) = 0;
 };
 

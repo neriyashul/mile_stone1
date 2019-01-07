@@ -13,19 +13,16 @@
 #include <fstream>
 #include <sstream>
 #include <thread>
-
-#include "Interpreter.h"
-
-
-
+#include "Var.h"
+#include "RunProgram.h"
 
 
 class ReadData {
-std::vector<std::thread> threads;
 public:
     void readFromFile(std::string fileName);
 
     void readFromConsole();
+
 };
 
 #endif //UNTITLED1_READCODE_H

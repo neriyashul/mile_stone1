@@ -7,14 +7,14 @@
 
 
 #include "Command.h"
-#include "ShuntingYard.h"
+#include "ExpressionFactory.h"
 #include <thread>
 
 class SleepCommand : public Command {
-    ShuntingYard* sy;
+    ExpressionFactory* ef;
 public:
-    explicit SleepCommand(ShuntingYard* shunY) {
-        sy = shunY;
+    explicit SleepCommand(ExpressionFactory* expressFactor) {
+        ef = expressFactor;
     }
     void doCommand(std::vector<std::string> &v) override;
 };

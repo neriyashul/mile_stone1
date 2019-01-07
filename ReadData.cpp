@@ -1,38 +1,27 @@
-//
-// Created by yedaya on 12/25/18.
-//
-
 
 #include "ReadData.h"
-#include "Lexer.h"
-#include "Parser.h"
 
 using  namespace std;
 void ReadData::readFromFile(string fileName) {
-    //Interpreter interpreter;
-    Lexer lexer;
-    Parser p(&this->threads);
 
+    RunProgram runable;
     ifstream infile;
 
     // open file
     infile.open (fileName);
 
     // put content in string
-    string input(dynamic_cast<stringstream const&>(stringstream() << infile.rdbuf()).str());
+    string input(dynamic_cast<stringstream const&>(
+                 stringstream() << infile.rdbuf()).str());
 
     // close file
     infile.close();
 
-    vector<string> v = lexer.lexer(input);
-    p.parse(v);
-    p.end();
+    runable.run(input);
 }
 
 void ReadData::readFromConsole() {
-    //Interpreter interpreter;
-    Lexer lexer;
-    Parser p(&threads);
+    RunProgram runable;
 
     string input;
     string line;
@@ -47,15 +36,14 @@ void ReadData::readFromConsole() {
 
         // read until type 'quit'
         if (line == "exit") {
-            p.end();
             break;
         }
 
         // if in the new line there is new scope add it.
-        if (line.find_first_of('{') != string::npos) {
+        if (line.find('{') != string::npos) {
             ++numOfOpenScope;
         // if in the new line there is end of scope add it.
-        } else if (line.find_first_of('}') != string::npos) {
+        } else if (line.find('}') != string::npos) {
             ++numOfCloseScope;
         }
 
@@ -63,13 +51,10 @@ void ReadData::readFromConsole() {
         input += line + "\n";
 
         // if there is open scope, continue to read.
-        if (numOfOpenScope != numOfCloseScope) {
+        if (numOfOpenScope != numOfCloseScope
+                           || runable.isContinue(line)) {
             continue;
         }
-
-        // use lexer and interpreter
-        //interpreter.parse(interpreter.lexer(input));
-        vector<string> v = lexer.lexer(input);
-        p.parse(v);
+        runable.run(input);
     }
 }

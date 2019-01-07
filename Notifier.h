@@ -17,11 +17,7 @@ public:
      * Observer pattern
      ******************************/
 
-    ~Notifier() {
-        for (Observer* o: observers) {
-            delete(o);
-        }
-    }
+    ~Notifier() = default;
 
     void addObserver(Observer* o) {
         observers.push_back(o);

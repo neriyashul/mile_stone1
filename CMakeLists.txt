@@ -15,8 +15,6 @@ add_executable(mile_stone1
         ConditionParserCommand.cpp
         ConditionParserCommand.h
         Expression.h
-        Interpreter.cpp
-        Interpreter.h
 
         Lexer.h
         Lexer.cpp
@@ -24,8 +22,6 @@ add_executable(mile_stone1
         Num.h
         ShuntingYard.h
         ShuntingYard.cpp
-        Threads.h
-        Threads.cpp
         UnaryExpression.h
         ServerCommand.h
         Parser.h
@@ -45,16 +41,16 @@ add_executable(mile_stone1
         Var.h
         Equalize.cpp
         Equalize.h
-        bindExp.h
-        VarDataCommand.cpp
-        VarDataCommand.h
+        BindVar.h
+        VarCreatorCommand.cpp
+        VarCreatorCommand.h
         PrintCommand.h
         SleepCommand.cpp
         PrintCommand.cpp
         Var.cpp
         Observer.h
         Notifier.h
-        Notifier.cpp)
+        Notifier.cpp ExpressionFactory.cpp ExpressionFactory.h RunProgram.h IfCommand.cpp WhileCommand.cpp RunProgram.cpp ClientCommand.cpp UpdateableExpression.h UntieVar.h)
 
 
 #ClientServerCommands.h

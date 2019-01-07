@@ -8,15 +8,18 @@
 #include "Notifier.h"
 
 class TcpServer : public ServerCommand {
-    std::mutex* mtx;
 public:
     // constructor.
     TcpServer(std::unordered_map<std::string,int>* mapNames
-                 ,std::unordered_map<int, double>* mapValues,
-                 std::mutex* mtxServer, Notifier& n)
-                       : ServerCommand(mapNames, mapValues, n){
-        mtx = mtxServer;
+                 ,std::unordered_map<int, double*>* mapValues,
+                 std::mutex* mtxServer, Notifier* n,
+                 std::vector<std::thread>* threads,
+                 ExpressionFactory* ExpressFactor)
+                   : ServerCommand(mapNames, mapValues, n,
+                           threads, ExpressFactor, mtxServer){
     }
+
+    ~TcpServer() override = default;
 
     /**
      * The function open new server.

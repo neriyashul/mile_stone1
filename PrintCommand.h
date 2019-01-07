@@ -1,6 +1,3 @@
-//
-// Created by neriya on 1/2/19.
-//
 
 #ifndef MILE_STONE1_PRINTCOMMAND_H
 #define MILE_STONE1_PRINTCOMMAND_H
@@ -9,15 +6,16 @@
 #include <iostream>
 #include "Command.h"
 #include "Var.h"
-#include "ShuntingYard.h"
+#include "ExpressionFactory.h"
 
 class PrintCommand : public Command {
+    bool isString = false;
     std::unordered_map<std::string,Var*>* variables;
-    ShuntingYard* sy = nullptr;
+    ExpressionFactory* expressFactor = nullptr;
 public:
-    PrintCommand(ShuntingYard* shuntY, std::unordered_map<std::string,Var*>* vars) {
+    PrintCommand(ExpressionFactory* ef, std::unordered_map<std::string,Var*>* vars) {
         variables = vars;
-        sy = shuntY;
+        expressFactor = ef;
     }
 
     void doCommand(std::vector<std::string>& v) override;
