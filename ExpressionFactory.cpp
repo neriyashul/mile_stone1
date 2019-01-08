@@ -122,7 +122,9 @@ Expression* ExpressionFactory::postfixCalculator(deque<string> strExpressions)  
             Var* e = new Var;
             // copy by value the parameter from (*variables)[str] to e.
             e->setExpression(new Num((*variables)[str]->calculate()));
-            e->setPath((*variables)[str]->getPath());
+            string s = (*variables)[str]->getPath();
+            e->setPath(s);
+
 
             if (isPrevMinus) {
                 numbers.push(new MinusExp(new Num(0), e));

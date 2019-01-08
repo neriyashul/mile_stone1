@@ -29,6 +29,7 @@ void Equalize::doCommand(vector<string> &args)  {
     Expression* e = expressFactor->expressionFromString(args).front();
     double right = e->calculate();
     this->name->update(right);
+    string s = name->getPath();
     *this->massage = "set " + name->getPath() +  " " + to_string(right);
     //string f = *this->massage;
     *this->isNewMassage = true;

@@ -55,6 +55,11 @@ Var* VarDataCommand::createArithmeticOrUntieVar(vector<string> &expression) {
     Expression* e = expressFactor->expressionFromString(expression).front();
     double d = e->calculate();
     var->setExpression(new Num(d));
+    if (expressFactor->isVar(expression[expression.size() - 1])) {
+        string name = expression[expression.size() - 1];
+        Var* a = (*variables)[name];
+        var->setPath(a->getPath());
+    }
     delete(e);
     return var;
 }

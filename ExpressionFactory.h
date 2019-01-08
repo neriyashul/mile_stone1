@@ -31,14 +31,7 @@ protected:
      */
     void addPriorityOperator(std::map<char, priorityOperator> &priorityMap);
 
-    /**
-     * the function return if the enter string is a name of variable.
-     * @param name - string&.
-     * @return bool.
-     */
-    bool isVar(std::string& name) {
-        return (variables->count(name) > 0);
-    }
+
 
     /**
      * The function return if the string is binary expression.
@@ -86,9 +79,19 @@ protected:
 
 
 public:
+
     virtual ~ExpressionFactory() = default;
     explicit ExpressionFactory(std::unordered_map<std::string,Var*>* vars) {
         variables = vars;
+    }
+
+    /**
+     * the function return if the enter string is a name of variable.
+     * @param name - string&.
+     * @return bool.
+     */
+    bool isVar(std::string& name) {
+        return (variables->count(name) > 0);
     }
 
     /**
